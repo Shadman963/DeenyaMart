@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Search Results{% if search_query %} for "{{ search_query }}"{% endif %} — DeenyaMart{% endblock %}
+
+{% block content %}
+<div class="dm-page-header">
+  <div class="dm-container">
+    <nav class="dm-breadcrumbs" aria-label="Breadcrumb">
+      <a href="{% url 'core:home' %}">Home</a>
+      <span>/</span>
+      <span aria-current="page">Search</span>
+    </nav>
+    <h1 style="font-size: var(--dm-text-2xl); margin-bottom: 0.35rem;">
+      {% if search_query %}Search results for "{{ search_query }}"{% else %}Catalog Search{% endif %}
+    </h1>
+    <p style="color: var(--dm-text-secondary); font-size: var(--dm-text-sm); margin: 0;">
+      Found {{ products|length }} matching {% if products|length == 1 %}item{% else %}items{% endif %}.
+    </p>
+  </div>
+</div>
+
+<div class="dm-container" style="padding-bottom: 4rem;">
+  <div class="dm-product-grid">
+    {% for product in products %}
+      {% include "components/_product_card.html" with product=product %}
+    {% empty %}
+      <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; background: var(--dm-bg-surface); border-radius: var(--dm-radius-md); border: 1px solid var(--dm-border-subtle);">
+        <p style="font-size: var(--dm-text-lg); font-weight: 600;">No products matched "{{ search_query }}".</p>
+        <p style="color: var(--dm-text-secondary); font-size: var(--dm-text-sm);">Try searching for "Khimar", "Hijab", "Panjabi", "Linen", or an SKU like "LF104".</p>
+        <a href="{% url 'catalog:product_list' %}" class="dm-btn dm-btn--primary dm-btn--sm">View All Products</a>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

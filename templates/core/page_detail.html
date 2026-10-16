@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}{{ page.title }} — DeenyaMart{% endblock %}
+{% block content %}
+<div class="dm-container" style="padding-block: 3rem 4rem; max-width: 780px;">
+  <article style="background: var(--dm-bg-surface); border: 1px solid var(--dm-border-subtle); border-radius: var(--dm-radius-lg); padding: clamp(1.75rem, 4vw, 3rem);">
+    <span class="dm-section__eyebrow">Storefront Policy</span>
+    <h1 style="font-size: var(--dm-text-2xl); margin-bottom: 0.5rem;">{{ page.title }}</h1>
+    {% if page.summary %}
+    <p style="color: var(--dm-text-secondary); font-size: var(--dm-text-md); margin-bottom: 1.5rem;">{{ page.summary }}</p>
+    {% endif %}
+    <div style="border-top: 1px solid var(--dm-border-subtle); padding-top: 1.5rem; line-height: 1.75;">
+      {{ page.body_html|safe }}
+    </div>
+  </article>
+</div>
+{% endblock %}

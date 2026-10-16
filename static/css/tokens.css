@@ -1,0 +1,95 @@
+/* ==========================================================================
+   DeenyaMart Design System — Design Tokens (tokens.css)
+   Editorial "Modern Heritage & Everyday Utility" Palette
+   ========================================================================== */
+
+:root {
+  /* Surface & Canvas Palette (Warm Off-White / Alabaster Sand) */
+  --dm-bg-canvas: #FAF7F2;
+  --dm-bg-surface: #FFFFFF;
+  --dm-bg-subtle: #F1ECE1;
+  --dm-bg-muted: #E7E0D2;
+  --dm-bg-dark: #10241E;
+  --dm-bg-emerald-deep: #09382D;
+
+  /* Typography Colors (Deep Charcoal / Forest Ink) */
+  --dm-text-primary: #16231E;
+  --dm-text-secondary: #465850;
+  --dm-text-muted: #667870;
+  --dm-text-on-dark: #FAF7F2;
+  --dm-text-on-dark-muted: #C9D6D0;
+
+  /* Brand & Accent Colors (Deep Forest Emerald + Restrained Terracotta + Brass) */
+  --dm-brand-primary: #0B4F3F;
+  --dm-brand-primary-hover: #07382C;
+  --dm-brand-primary-soft: #E3EFEA;
+  --dm-brand-accent: #C86D2D;
+  --dm-brand-accent-hover: #AC581D;
+  --dm-brand-accent-soft: #F9EBE0;
+  --dm-brand-gold: #B8862D;
+  --dm-brand-gold-soft: #F5ECD8;
+
+  /* Borders & Hairlines */
+  --dm-border-subtle: #E2DDD2;
+  --dm-border-strong: #CCC4B4;
+  --dm-border-focus: #0B4F3F;
+
+  /* Semantic Status Colors */
+  --dm-status-success: #166534;
+  --dm-status-success-bg: #E6F4EA;
+  --dm-status-warning: #9A4406;
+  --dm-status-warning-bg: #FEF1E6;
+  --dm-status-danger: #B91C1C;
+  --dm-status-danger-bg: #FEECEC;
+
+  /* Typography Stacks */
+  --dm-font-display: "Fraunces", "Georgia", "Times New Roman", serif;
+  --dm-font-sans: "Plus Jakarta Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --dm-font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Fluid Type Scale */
+  --dm-text-2xs: 0.7rem;     /* 11.2px */
+  --dm-text-xs: 0.775rem;    /* 12.4px */
+  --dm-text-sm: 0.875rem;    /* 14px */
+  --dm-text-base: 1rem;      /* 16px */
+  --dm-text-md: 1.0625rem;   /* 17px */
+  --dm-text-lg: 1.1875rem;   /* 19px */
+  --dm-text-xl: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+  --dm-text-2xl: clamp(1.5rem, 1.25rem + 1vw, 2.125rem);
+  --dm-text-3xl: clamp(1.85rem, 1.45rem + 1.6vw, 2.75rem);
+  --dm-text-hero: clamp(2.05rem, 1.55rem + 2.2vw, 3.35rem);
+
+  /* Spacing Scale */
+  --dm-space-1: 0.25rem;
+  --dm-space-2: 0.5rem;
+  --dm-space-3: 0.75rem;
+  --dm-space-4: 1rem;
+  --dm-space-5: 1.25rem;
+  --dm-space-6: 1.5rem;
+  --dm-space-8: 2rem;
+  --dm-space-10: 2.5rem;
+  --dm-space-12: 3rem;
+  --dm-space-16: 4rem;
+  --dm-space-20: 5rem;
+
+  /* Layout & Radii */
+  --dm-container-max: 1340px;
+  --dm-container-pad: clamp(1rem, 3vw, 2.5rem);
+  --dm-radius-xs: 6px;
+  --dm-radius-sm: 8px;
+  --dm-radius-md: 12px;
+  --dm-radius-card: 14px;
+  --dm-radius-lg: 20px;
+  --dm-radius-pill: 9999px;
+
+  /* Elevation & Shadows */
+  --dm-shadow-xs: 0 1px 2px rgba(20, 35, 30, 0.04);
+  --dm-shadow-sm: 0 4px 12px rgba(20, 35, 30, 0.05);
+  --dm-shadow-md: 0 10px 28px rgba(20, 35, 30, 0.08);
+  --dm-shadow-lg: 0 20px 44px rgba(20, 35, 30, 0.14);
+
+  /* Transitions */
+  --dm-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dm-duration-fast: 160ms;
+  --dm-duration-normal: 260ms;
+}

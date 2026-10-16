@@ -1,0 +1,388 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<!-- Development Fixture Transparency Bar -->
+{% if has_dev_fixtures %}
+<div class="dm-fixture-notice" role="region" aria-label="Development Catalog Notice">
+  <div class="dm-container dm-fixture-notice__inner">
+    <span>
+      <strong>Development Catalog Mode:</strong> Products marked <code style="font-family: var(--dm-font-mono); font-weight: 700;">Fixture</code> are clearly identified development fixtures using bespoke local SVG illustrations while awaiting live Droploo CSV/JSON catalog import.
+    </span>
+    <a href="{% url 'catalog:product_list' %}" style="font-weight: 700; text-decoration: underline;">Inspect Full Catalog ({{ new_arrivals|length }}+ SKUs)</a>
+  </div>
+</div>
+{% endif %}
+
+<!-- 4. Strong Editorial Hero Section -->
+<section class="dm-hero" aria-labelledby="hero-heading">
+  <div class="dm-container dm-hero__grid">
+    <div class="dm-hero__content">
+      <div class="dm-hero__eyebrow">
+        <span style="width: 7px; height: 7px; border-radius: 50%; background-color: var(--dm-brand-accent);"></span>
+        <span>{{ site_settings.hero_eyebrow|default:"Seasonal Archive · Natural Linen, Breathable Cotton & Cherry Weaves" }}</span>
+      </div>
+
+      <h1 id="hero-heading" class="dm-hero__headline">
+        {{ site_settings.hero_headline|default:"Refined Modest Wear & Mindful Home Essentials." }}
+      </h1>
+
+      <p class="dm-hero__copy">
+        {{ site_settings.hero_subheadline|default:"Tailored Khimars, Salat Hijabs, artisanal Panjabis, and curated household tools—crafted in breathable fabrics for everyday comfort across Bangladesh." }}
+      </p>
+
+      <div class="dm-hero__actions">
+        <a href="{{ site_settings.hero_primary_cta_url|default:'/shop/' }}" class="dm-btn dm-btn--primary">
+          <span>{{ site_settings.hero_primary_cta_text|default:"Shop Now" }}</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+        <a href="{{ site_settings.hero_secondary_cta_url|default:'#categories-section' }}" class="dm-btn dm-btn--outline">
+          <span>{{ site_settings.hero_secondary_cta_text|default:"Browse Categories" }}</span>
+        </a>
+      </div>
+
+      <div class="dm-hero__highlights" aria-label="Verified Storefront Commitments">
+        <div>
+          <span class="dm-hero__stat-label">Linen &amp; Cotton</span>
+          <span class="dm-hero__stat-desc">Breathable opaque modest weaves</span>
+        </div>
+        <div>
+          <span class="dm-hero__stat-label dm-tabular">৳60 – ৳120</span>
+          <span class="dm-hero__stat-desc">Transparent Inside &amp; Outside Dhaka rates</span>
+        </div>
+        <div>
+          <span class="dm-hero__stat-label">Doorstep COD</span>
+          <span class="dm-hero__stat-desc">Inspect parcel upon delivery</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="dm-hero__visual">
+      <div class="dm-hero__frame">
+        <img
+          src="{% static 'img/editorial/hero-modest-editorial.svg' %}"
+          alt="Editorial illustration of draped natural linen khimar and terracotta shawl against a deep emerald architectural arch"
+          width="900"
+          height="1050"
+          fetchpriority="high"
+          decoding="async"
+          class="dm-hero__img"
+        >
+        <div class="dm-hero__caption-card">
+          <div>
+            <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--dm-brand-primary);">
+              Featured Lookbook
+            </div>
+            <div style="font-weight: 600; font-size: var(--dm-text-sm);">
+              Lilen Fabric Khimar Set LF104 &amp; Salat Hijab Edit
+            </div>
+          </div>
+          <a href="{% url 'catalog:category_detail' slug='womens-modest-wear' %}" class="dm-btn dm-btn--primary dm-btn--sm">
+            Explore
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. Category Discovery Cards Using Real Catalog Categories -->
+<section id="categories-section" class="dm-section" aria-labelledby="categories-heading">
+  <div class="dm-container">
+    <div class="dm-section__header">
+      <div>
+        <span class="dm-section__eyebrow">Catalog Taxonomy</span>
+        <h2 id="categories-heading" class="dm-section__title">Explore by Category</h2>
+        <p class="dm-section__subtitle">
+          Discover modest garments by silhouette and fabric alongside verified household &amp; daily utility collections.
+        </p>
+      </div>
+      <a href="{% url 'catalog:product_list' %}" class="dm-btn dm-btn--outline dm-btn--sm">
+        View Full Catalog →
+      </a>
+    </div>
+
+    <div class="dm-category-grid">
+      {% for cat in discovery_categories %}
+      <article class="dm-category-card">
+        <a href="{{ cat.get_absolute_url }}" class="dm-category-card__media" aria-label="Browse {{ cat.name }}">
+          <img
+            src="{{ cat.image_url|default:'/static/img/categories/cat-womens-modest.svg' }}"
+            alt="{{ cat.name }} collection illustration"
+            width="480"
+            height="360"
+            loading="lazy"
+            decoding="async"
+            class="dm-category-card__img"
+          >
+          <span class="dm-category-card__count dm-tabular">{{ cat.product_total }} {% if cat.product_total == 1 %}Item{% else %}Items{% endif %}</span>
+        </a>
+        <div class="dm-category-card__body">
+          <h3 class="dm-category-card__title">
+            <a href="{{ cat.get_absolute_url }}">{{ cat.name }}</a>
+          </h3>
+          {% if cat.subtitle %}
+          <p class="dm-category-card__subtitle">{{ cat.subtitle }}</p>
+          {% endif %}
+          {% if cat.subcategories %}
+          <div class="dm-category-card__sublist" aria-label="{{ cat.name }} subcategories">
+            {% for sub in cat.subcategories %}
+            <a href="{{ sub.get_absolute_url }}" class="dm-subcat-chip">{{ sub.name }}</a>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- 6. New Arrivals in Responsive Grid -->
+<section class="dm-section dm-section--subtle" aria-labelledby="new-arrivals-heading">
+  <div class="dm-container">
+    <div class="dm-section__header">
+      <div>
+        <span class="dm-section__eyebrow">Seasonal Additions</span>
+        <h2 id="new-arrivals-heading" class="dm-section__title">New Arrivals</h2>
+        <p class="dm-section__subtitle">
+          Newly cataloged modest wear sets, prayer garments, and tailored cotton panjabis.
+        </p>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+        <a href="{% url 'catalog:product_list' %}?fabric=natural-linen" class="dm-btn dm-btn--outline dm-btn--sm">Natural Linen</a>
+        <a href="{% url 'catalog:product_list' %}?fabric=pure-cotton" class="dm-btn dm-btn--outline dm-btn--sm">Pure Cotton</a>
+        <a href="{% url 'catalog:product_list' %}?sort=newest" class="dm-btn dm-btn--primary dm-btn--sm">All New Arrivals →</a>
+      </div>
+    </div>
+
+    <div class="dm-product-grid">
+      {% for product in new_arrivals %}
+        {% include "components/_product_card.html" with product=product %}
+      {% empty %}
+        <p>No new arrivals are currently published.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- 7. Distinct Promotional Collection Banner -->
+<section class="dm-section" aria-labelledby="promo-collection-heading">
+  <div class="dm-container">
+    <div class="dm-promo-banner">
+      <div class="dm-promo-banner__grid">
+        <div>
+          <span class="dm-promo-banner__eyebrow">
+            {{ site_settings.promo_banner_eyebrow|default:"Curated Textile Story · Breathable Weaves" }}
+          </span>
+          <h2 id="promo-collection-heading" class="dm-promo-banner__title">
+            {{ site_settings.promo_banner_title|default:"The Linen & Pure Cotton Modest Edit" }}
+          </h2>
+          <p class="dm-promo-banner__copy">
+            {{ site_settings.promo_banner_subtitle|default:"Lightweight, opaque silhouettes designed for effortless prayer and daily wear. Featuring full-coverage Khimars, Kids' matching sets, and fine-stitched Panjabis." }}
+          </p>
+
+          <div class="dm-promo-banner__swatches" aria-label="Featured Fabric Groupings">
+            <span class="dm-swatch-tag">
+              <span style="width: 10px; height: 10px; border-radius: 50%; background: #E8DFCE;"></span>
+              <span>Natural Linen (LF104 / KCK114)</span>
+            </span>
+            <span class="dm-swatch-tag">
+              <span style="width: 10px; height: 10px; border-radius: 50%; background: #9ED5C5;"></span>
+              <span>Combed Cotton (SH103 / VCP108)</span>
+            </span>
+            <span class="dm-swatch-tag">
+              <span style="width: 10px; height: 10px; border-radius: 50%; background: #C86D2D;"></span>
+              <span>Cherry Crepe (WJB204 / KCKS123)</span>
+            </span>
+          </div>
+
+          <div style="display: flex; flex-wrap: wrap; gap: 0.75rem;">
+            <a href="{{ site_settings.promo_banner_cta_url|default:'/category/womens-modest-wear/' }}" class="dm-btn dm-btn--accent">
+              {{ site_settings.promo_banner_cta_text|default:"Explore the Collection" }}
+            </a>
+            {% if site_settings.promo_banner_secondary_text %}
+            <a href="{{ site_settings.promo_banner_secondary_url|default:'/category/kids-modest-wear/' }}" class="dm-btn dm-btn--light">
+              {{ site_settings.promo_banner_secondary_text }}
+            </a>
+            {% endif %}
+          </div>
+        </div>
+
+        <div>
+          <img
+            src="{% static 'img/editorial/promo-linen-collection.svg' %}"
+            alt="Fabric swatch board showing Natural Linen, Combed Cotton, and Cherry Crepe textile properties"
+            width="800"
+            height="520"
+            loading="lazy"
+            decoding="async"
+            style="border-radius: var(--dm-radius-md); border: 1px solid rgba(250, 247, 242, 0.15);"
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8. Best-Selling Products (ONLY when real sales data exists; otherwise Featured Products) -->
+<section class="dm-section" aria-labelledby="featured-or-bestselling-heading" style="padding-top: 0;">
+  <div class="dm-container">
+    <div class="dm-section__header">
+      <div>
+        <span class="dm-section__eyebrow">{{ popular_section_eyebrow }}</span>
+        <h2 id="featured-or-bestselling-heading" class="dm-section__title">{{ popular_section_title }}</h2>
+        <p class="dm-section__subtitle">{{ popular_section_subtitle }}</p>
+      </div>
+      <a href="{% url 'catalog:product_list' %}" class="dm-btn dm-btn--outline dm-btn--sm">
+        Browse All Featured Items →
+      </a>
+    </div>
+
+    <div class="dm-product-grid">
+      {% for product in featured_products %}
+        {% include "components/_product_card.html" with product=product %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- 9. Trust Section Displaying Only Verified Delivery, Payment, and Returns Information -->
+<section class="dm-section dm-section--subtle" aria-labelledby="trust-heading">
+  <div class="dm-container">
+    <div class="dm-section__header">
+      <div>
+        <span class="dm-section__eyebrow">Verified Storefront Policies</span>
+        <h2 id="trust-heading" class="dm-section__title">Transparent Delivery, Payment &amp; Returns</h2>
+        <p class="dm-section__subtitle">
+          Clear, documented fulfillment commitments across Bangladesh—no hidden fees or unverified claims.
+        </p>
+      </div>
+    </div>
+
+    <div class="dm-trust-grid">
+      <!-- Card 1: Verified Nationwide Delivery Rates from DB -->
+      <article class="dm-trust-card">
+        <div class="dm-trust-card__icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="1" y="3" width="15" height="13"></rect>
+            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+            <circle cx="5.5" cy="18.5" r="2.5"></circle>
+            <circle cx="18.5" cy="18.5" r="2.5"></circle>
+          </svg>
+        </div>
+        <h3 class="dm-trust-card__title">Nationwide Courier Delivery</h3>
+        <p class="dm-trust-card__desc">
+          Dispatched from Dhaka to all 64 districts with flat, zone-based shipping rates:
+        </p>
+        <div class="dm-trust-rates">
+          {% for zone in shipping_zones %}
+          <div class="dm-trust-rate-row">
+            <span>{{ zone.name }} ({{ zone.estimated_delivery_days }})</span>
+            <strong class="dm-tabular" style="font-family: var(--dm-font-mono);">৳{{ zone.base_rate|floatformat:0 }}</strong>
+          </div>
+          {% endfor %}
+        </div>
+      </article>
+
+      <!-- Card 2: Verified Payment Method (Cash on Delivery) -->
+      <article class="dm-trust-card">
+        <div class="dm-trust-card__icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+            <line x1="2" y1="10" x2="22" y2="10"></line>
+          </svg>
+        </div>
+        <h3 class="dm-trust-card__title">Cash on Delivery (COD)</h3>
+        <p class="dm-trust-card__desc">
+          {{ site_settings.cod_verification_note|default:"Pay in cash at your doorstep upon receiving your parcel. Orders are confirmed via phone/SMS." }}
+        </p>
+        <div class="dm-trust-rates">
+          <div class="dm-trust-rate-row">
+            <span>Active Payment Method</span>
+            <strong style="color: var(--dm-brand-primary);">Cash on Delivery</strong>
+          </div>
+        </div>
+      </article>
+
+      <!-- Card 3: Verified Exchange & Return Policy -->
+      <article class="dm-trust-card">
+        <div class="dm-trust-card__icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="1 4 1 10 7 10"></polyline>
+            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+          </svg>
+        </div>
+        <h3 class="dm-trust-card__title">Doorstep Check &amp; {{ site_settings.return_window_days|default:7 }}-Day Exchange</h3>
+        <p class="dm-trust-card__desc">
+          {{ site_settings.return_policy_summary|default:"Inspect your parcel at delivery. Easy 7-day size exchange or return for unused items in original packaging." }}
+        </p>
+        <div class="dm-trust-rates">
+          <a href="{% url 'core:page_detail' slug='return-policy' %}" style="color: var(--dm-brand-primary); font-weight: 600;">
+            Read Full Return Policy →
+          </a>
+        </div>
+      </article>
+
+      <!-- Card 4: Verified Order Status Tracking -->
+      <article class="dm-trust-card">
+        <div class="dm-trust-card__icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+        </div>
+        <h3 class="dm-trust-card__title">Direct Order Tracking</h3>
+        <p class="dm-trust-card__desc">
+          Follow your order status from confirmation and packing to courier pickup and doorstep delivery.
+        </p>
+        <div class="dm-trust-rates">
+          <a href="{% url 'orders:track' %}" style="color: var(--dm-brand-primary); font-weight: 600;">
+            Track an Existing Order →
+          </a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- 10. Newsletter Signup with Server-Side Handling -->
+<section class="dm-section" aria-labelledby="newsletter-heading">
+  <div class="dm-container">
+    <div class="dm-newsletter">
+      <div>
+        <span class="dm-section__eyebrow">Atelier Dispatches</span>
+        <h2 id="newsletter-heading" class="dm-section__title">Receive New Fabric &amp; Restock Notes</h2>
+        <p class="dm-section__subtitle">
+          Subscribe for quiet notifications when new Linen Khimars, Salat Hijabs, and seasonal Panjabi weaves arrive in stock. No daily spam.
+        </p>
+      </div>
+
+      <div>
+        <form action="{% url 'core:newsletter_subscribe' %}" method="post" class="js-newsletter-form" novalidate>
+          {% csrf_token %}
+          <label for="newsletter-email" class="sr-only">Email address for seasonal updates</label>
+          <div class="dm-newsletter__form">
+            <input
+              type="email"
+              id="newsletter-email"
+              name="email"
+              required
+              placeholder="Enter your email address (e.g. amina@example.com)"
+              class="dm-newsletter__input"
+              autocomplete="email"
+            >
+            <button type="submit" class="dm-btn dm-btn--primary">Subscribe</button>
+          </div>
+          <p class="dm-newsletter__feedback js-newsletter-feedback" role="status" aria-live="polite" hidden></p>
+          <p style="font-size: 0.72rem; color: var(--dm-text-muted); margin-top: 0.5rem; margin-bottom: 0;">
+            Stored securely on our server. You can unsubscribe at any time. See our <a href="{% url 'core:page_detail' slug='privacy-policy' %}" style="text-decoration: underline;">Privacy Policy</a>.
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

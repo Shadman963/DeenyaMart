@@ -1,0 +1,141 @@
+<div class="dm-header-wrap">
+  <header class="dm-container dm-header">
+    <!-- Left: Mobile Menu Button + Original Wordmark & Emblem -->
+    <div class="dm-header__left">
+      <button
+        type="button"
+        class="dm-mobile-menu-btn"
+        data-open-dialog="dm-mobile-drawer"
+        aria-controls="dm-mobile-drawer"
+        aria-expanded="false"
+        aria-label="Open categories and navigation menu"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+
+      <a href="{% url 'core:home' %}" class="dm-brand" aria-label="{{ site_settings.site_name|default:'DeenyaMart' }} Home">
+        <svg class="dm-brand__emblem" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <rect width="64" height="64" rx="14" fill="#0B4F3F"/>
+          <path d="M32 10L38.5 19.5L49.5 16.5L46.5 27.5L56 34L46.5 40.5L49.5 51.5L38.5 48.5L32 58L25.5 48.5L14.5 51.5L17.5 40.5L8 34L17.5 27.5L14.5 16.5L25.5 19.5L32 10Z" stroke="#C88A36" stroke-width="2" fill="#083B2F"/>
+          <path d="M23 42V29C23 24.0294 27.0294 20 32 20C36.9706 20 41 24.0294 41 29V42H23Z" stroke="#FAF7F2" stroke-width="2.5"/>
+          <circle cx="32" cy="29" r="3" fill="#C86D2D"/>
+        </svg>
+        <span class="dm-brand__text">
+          <span class="dm-brand__wordmark">Deenya<span>Mart</span><span class="dm-brand__dot">.</span></span>
+          <span class="dm-brand__sub">Modest &amp; Home Atelier</span>
+        </span>
+      </a>
+    </div>
+
+    <!-- Center: Working Search Form with Live Autocomplete -->
+    <div class="dm-search">
+      <form action="{% url 'catalog:search' %}" method="get" role="search" class="dm-search__form">
+        <label for="dm-search-input" class="sr-only">Search modest wear, panjabis, kids sets, or SKU codes</label>
+        <svg class="dm-search__icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input
+          type="search"
+          id="dm-search-input"
+          name="q"
+          value="{{ search_query|default:'' }}"
+          class="dm-search__input"
+          placeholder="Search khimar, salat hijab, panjabi, or SKU (e.g. LF104)…"
+          autocomplete="off"
+          role="combobox"
+          aria-expanded="false"
+          aria-autocomplete="list"
+          aria-controls="dm-search-dropdown"
+        >
+        <button type="submit" class="dm-search__submit">Search</button>
+      </form>
+      <div id="dm-search-dropdown" class="dm-search__dropdown" role="listbox" aria-label="Search suggestions" hidden></div>
+    </div>
+
+    <!-- Right: Account, Wishlist Placeholder/Counter, and Cart Drawer Trigger -->
+    <div class="dm-header__actions">
+      <a href="{% url 'accounts:dashboard' %}" class="dm-action-btn" aria-label="Customer Account">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span class="dm-action-btn__label">{% if user.is_authenticated %}{{ user.get_display_name|truncatechars:12 }}{% else %}Account{% endif %}</span>
+      </a>
+
+      <a href="{% url 'accounts:wishlist' %}" class="dm-action-btn" aria-label="Saved Wishlist ({{ wishlist_count|default:0 }} items)">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+        </svg>
+        <span class="dm-action-btn__label">Wishlist</span>
+        <span class="dm-badge-count dm-tabular" data-wishlist-count>{{ wishlist_count|default:0 }}</span>
+      </a>
+
+      <button
+        type="button"
+        class="dm-action-btn dm-action-btn--cart"
+        data-open-dialog="dm-cart-drawer"
+        aria-controls="dm-cart-drawer"
+        aria-expanded="false"
+        aria-label="Open shopping bag ({{ cart_count|default:0 }} items)"
+      >
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
+        <span class="dm-action-btn__label">Bag</span>
+        <span class="dm-badge-count dm-tabular" data-cart-count>{{ cart_count|default:0 }}</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- 3. Desktop Category Navigation Bar (Populated Dynamically from Django) -->
+  <nav class="dm-nav-bar" aria-label="Main Product Categories">
+    <div class="dm-container dm-nav">
+      <ul class="dm-nav__list">
+        <li class="dm-nav__item">
+          <a href="{% url 'catalog:product_list' %}" class="dm-nav__link">All Collections</a>
+        </li>
+        {% for category in nav_categories %}
+        <li class="dm-nav__item">
+          <a href="{{ category.get_absolute_url }}" class="dm-nav__link">
+            <span>{{ category.name }}</span>
+            {% if category.active_children %}
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+            {% endif %}
+          </a>
+          {% if category.active_children %}
+          <ul class="dm-nav__submenu" aria-label="{{ category.name }} subcategories">
+            <li>
+              <a href="{{ category.get_absolute_url }}" class="dm-nav__sublink" style="font-weight: 600; color: var(--dm-brand-primary);">
+                <span>All {{ category.name }}</span>
+                <span>→</span>
+              </a>
+            </li>
+            {% for sub in category.active_children %}
+            <li>
+              <a href="{{ sub.get_absolute_url }}" class="dm-nav__sublink">
+                <span>{{ sub.name }}</span>
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <a href="{% url 'catalog:product_list' %}?sort=newest" class="dm-nav__link">New Arrivals</a>
+        <a href="{% url 'catalog:product_list' %}?on_sale=1" class="dm-nav__link dm-nav__link--highlight">Value Offers</a>
+      </div>
+    </div>
+  </nav>
+</div>

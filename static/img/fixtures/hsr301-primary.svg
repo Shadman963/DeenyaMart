@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 750" width="600" height="750" fill="none">
+  <rect width="600" height="750" fill="#F5F2EB"/>
+  <rect x="24" y="24" width="552" height="702" rx="18" stroke="#14231E" stroke-opacity="0.06" stroke-width="1.5"/>
+  
+  <rect x="130" y="135" width="340" height="420" rx="36" fill="#FFFFFF" stroke="#E2DDD2" stroke-width="2"/>
+  <circle cx="300" cy="315" r="102" stroke="#5C4732" stroke-width="16" fill="none"/>
+  <circle cx="300" cy="315" r="56" fill="#C8862D" fill-opacity="0.2" stroke="#C8862D" stroke-width="3"/>
+  <rect x="245" y="455" width="110" height="28" rx="14" fill="#5C4732"/>
+
+  <!-- Bottom caption plate -->
+  <rect x="44" y="622" width="512" height="78" rx="12" fill="#FAF7F2" fill-opacity="0.95" stroke="#E2DDD2"/>
+  <text x="68" y="653" fill="#14231E" font-family="system-ui, sans-serif" font-size="16" font-weight="600">Brass &amp; Steel Counter Spice Rack</text>
+  <text x="68" y="679" fill="#4A5D55" font-family="system-ui, sans-serif" font-size="13" font-weight="500">Two-Tier Kitchen Organizer · SKU: HSR301</text>
+</svg>

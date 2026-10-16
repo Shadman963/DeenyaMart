@@ -1,0 +1,1 @@
+"""DeenyaMart configuration package."""

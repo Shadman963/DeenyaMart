@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Customer Account — DeenyaMart{% endblock %}
+{% block content %}
+<div class="dm-container" style="padding-block: 3rem 4rem; max-width: 560px;">
+  <div style="background: var(--dm-bg-surface); border: 1px solid var(--dm-border-subtle); border-radius: var(--dm-radius-lg); padding: 2.25rem;">
+    {% if user.is_authenticated %}
+      <h1 style="font-size: var(--dm-text-xl); margin-bottom: 0.5rem;">As-salamu alaykum, {{ user.get_display_name }}</h1>
+      <p style="color: var(--dm-text-secondary); font-size: var(--dm-text-sm);">Manage your saved wishlist, track Cash on Delivery parcels, or continue shopping.</p>
+      <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem;">
+        <a href="{% url 'orders:track' %}" class="dm-btn dm-btn--primary dm-btn--sm">Track Order</a>
+        <a href="{% url 'accounts:wishlist' %}" class="dm-btn dm-btn--outline dm-btn--sm">Saved Wishlist ({{ wishlist_count }})</a>
+        <form method="post" style="display: inline;">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="logout">
+          <button type="submit" class="dm-btn dm-btn--outline dm-btn--sm">Sign Out</button>
+        </form>
+      </div>
+    {% else %}
+      <h1 style="font-size: var(--dm-text-xl); margin-bottom: 0.5rem;">Customer Account Sign In</h1>
+      <p style="color: var(--dm-text-secondary); font-size: var(--dm-text-sm); margin-bottom: 1.5rem;">
+        Sign in with your phone number or email. Note: You can also place Cash on Delivery orders directly without creating an account.
+      </p>
+      <form method="post" style="display: flex; flex-direction: column; gap: 1rem;">
+        {% csrf_token %}
+        <div>
+          <label for="login-id" style="display: block; font-size: var(--dm-text-xs); font-weight: 600; margin-bottom: 0.35rem;">Mobile Number or Email</label>
+          <input id="login-id" type="text" name="identifier" required placeholder="017XXXXXXXX or email@example.com" style="width: 100%; padding: 0.7rem 0.9rem; border-radius: var(--dm-radius-sm); border: 1px solid var(--dm-border-strong);">
+        </div>
+        <div>
+          <label for="login-pw" style="display: block; font-size: var(--dm-text-xs); font-weight: 600; margin-bottom: 0.35rem;">Password</label>
+          <input id="login-pw" type="password" name="password" required style="width: 100%; padding: 0.7rem 0.9rem; border-radius: var(--dm-radius-sm); border: 1px solid var(--dm-border-strong);">
+        </div>
+        <button type="submit" class="dm-btn dm-btn--primary">Sign In</button>
+      </form>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

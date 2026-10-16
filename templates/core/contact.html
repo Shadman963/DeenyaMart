@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Contact Customer Care — DeenyaMart{% endblock %}
+{% block content %}
+<div class="dm-container" style="padding-block: 3rem 4rem; max-width: 780px;">
+  <div style="background: var(--dm-bg-surface); border: 1px solid var(--dm-border-subtle); border-radius: var(--dm-radius-lg); padding: clamp(1.75rem, 4vw, 3rem);">
+    <span class="dm-section__eyebrow">Dhaka Atelier Support</span>
+    <h1 style="font-size: var(--dm-text-2xl); margin-bottom: 0.5rem;">Contact Customer Care</h1>
+    <p style="color: var(--dm-text-secondary); font-size: var(--dm-text-sm); margin-bottom: 1.5rem;">
+      Phone: <strong>{{ site_settings.support_phone }}</strong> ({{ site_settings.support_hours }}) · Email: <strong>{{ site_settings.support_email }}</strong>
+    </p>
+    <form method="post" style="display: flex; flex-direction: column; gap: 1rem;">
+      {% csrf_token %}
+      <div>
+        <label for="contact-name" style="display: block; font-size: var(--dm-text-xs); font-weight: 600; margin-bottom: 0.35rem;">Your Name</label>
+        <input id="contact-name" type="text" name="name" required style="width: 100%; padding: 0.7rem; border-radius: var(--dm-radius-sm); border: 1px solid var(--dm-border-strong);">
+      </div>
+      <div>
+        <label for="contact-phone" style="display: block; font-size: var(--dm-text-xs); font-weight: 600; margin-bottom: 0.35rem;">Mobile Number</label>
+        <input id="contact-phone" type="tel" name="phone" style="width: 100%; padding: 0.7rem; border-radius: var(--dm-radius-sm); border: 1px solid var(--dm-border-strong);">
+      </div>
+      <div>
+        <label for="contact-msg" style="display: block; font-size: var(--dm-text-xs); font-weight: 600; margin-bottom: 0.35rem;">How can we help?</label>
+        <textarea id="contact-msg" name="message" rows="4" required style="width: 100%; padding: 0.7rem; border-radius: var(--dm-radius-sm); border: 1px solid var(--dm-border-strong);"></textarea>
+      </div>
+      <button type="submit" class="dm-btn dm-btn--primary" style="align-self: flex-start;">Send Message</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

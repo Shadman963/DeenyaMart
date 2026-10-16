@@ -1,0 +1,462 @@
+/* ==========================================================================
+   DeenyaMart Design System — Product Cards, Buttons, Badges & Toasts (components.css)
+   ========================================================================== */
+
+/* Buttons */
+.dm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.4rem;
+  border-radius: var(--dm-radius-pill);
+  font-family: var(--dm-font-sans);
+  font-size: var(--dm-text-sm);
+  font-weight: 600;
+  line-height: 1.2;
+  border: 1px solid transparent;
+  transition: background-color var(--dm-duration-fast) ease, color var(--dm-duration-fast) ease, border-color var(--dm-duration-fast) ease, transform var(--dm-duration-fast) ease;
+  text-align: center;
+}
+
+.dm-btn--primary {
+  background-color: var(--dm-brand-primary);
+  color: #FFFFFF;
+}
+
+.dm-btn--primary:hover {
+  background-color: var(--dm-brand-primary-hover);
+  color: #FFFFFF;
+}
+
+.dm-btn--accent {
+  background-color: var(--dm-brand-accent);
+  color: #FFFFFF;
+}
+
+.dm-btn--accent:hover {
+  background-color: var(--dm-brand-accent-hover);
+  color: #FFFFFF;
+}
+
+.dm-btn--outline {
+  background-color: transparent;
+  border-color: var(--dm-border-strong);
+  color: var(--dm-text-primary);
+}
+
+.dm-btn--outline:hover {
+  border-color: var(--dm-brand-primary);
+  color: var(--dm-brand-primary);
+  background-color: var(--dm-brand-primary-soft);
+}
+
+.dm-btn--light {
+  background-color: var(--dm-bg-canvas);
+  color: var(--dm-text-primary);
+}
+
+.dm-btn--light:hover {
+  background-color: #FFFFFF;
+}
+
+.dm-btn--sm {
+  padding: 0.5rem 0.95rem;
+  font-size: var(--dm-text-xs);
+}
+
+/* Product Card Component (<article class="dm-product-card">) */
+.dm-product-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--dm-bg-surface);
+  border: 1px solid var(--dm-border-subtle);
+  border-radius: var(--dm-radius-card);
+  overflow: hidden;
+  transition: border-color var(--dm-duration-normal) var(--dm-ease-out), box-shadow var(--dm-duration-normal) var(--dm-ease-out), transform var(--dm-duration-normal) var(--dm-ease-out);
+}
+
+.dm-product-card:hover {
+  border-color: var(--dm-border-strong);
+  box-shadow: var(--dm-shadow-md);
+  transform: translateY(-2px);
+}
+
+/* Consistent 4:5 Image Frame */
+.dm-product-card__media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  background-color: var(--dm-bg-subtle);
+  overflow: hidden;
+  border-bottom: 1px solid var(--dm-border-subtle);
+}
+
+.dm-product-card__media-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.dm-product-card__img {
+  width: 100%;
+  height: 100%;
+  transition: opacity var(--dm-duration-normal) var(--dm-ease-out), transform 450ms var(--dm-ease-out);
+}
+
+.dm-product-card__media--cover .dm-product-card__img {
+  object-fit: cover;
+}
+
+.dm-product-card__media--contain {
+  background-color: #F6F4EF;
+}
+
+.dm-product-card__media--contain .dm-product-card__img {
+  object-fit: contain;
+  padding: 0.65rem;
+}
+
+/* Secondary Image on Hover */
+.dm-product-card__img--secondary {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.dm-product-card:hover .dm-product-card__img--secondary,
+.dm-product-card:focus-within .dm-product-card__img--secondary {
+  opacity: 1;
+}
+
+.dm-product-card:hover .dm-product-card__img--primary.has-secondary,
+.dm-product-card:focus-within .dm-product-card__img--primary.has-secondary {
+  opacity: 0;
+}
+
+/* Badges Overlay on Card Media */
+.dm-product-card__badges {
+  position: absolute;
+  top: 0.65rem;
+  left: 0.65rem;
+  right: 3rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.dm-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--dm-radius-pill);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+}
+
+.dm-pill--discount {
+  background-color: var(--dm-brand-accent);
+  color: #FFFFFF;
+}
+
+.dm-pill--fabric {
+  background-color: rgba(250, 247, 242, 0.92);
+  color: var(--dm-text-primary);
+  border: 1px solid var(--dm-border-subtle);
+}
+
+.dm-pill--fixture {
+  background-color: rgba(20, 35, 30, 0.78);
+  color: #FAF7F2;
+  font-family: var(--dm-font-mono);
+  font-weight: 500;
+}
+
+/* Wishlist Button on Product Card */
+.dm-product-card__wishlist-form {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  z-index: 3;
+}
+
+.dm-wishlist-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.15rem;
+  height: 2.15rem;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--dm-border-subtle);
+  color: var(--dm-text-secondary);
+  box-shadow: var(--dm-shadow-xs);
+  transition: color var(--dm-duration-fast) ease, background-color var(--dm-duration-fast) ease, transform var(--dm-duration-fast) ease;
+}
+
+.dm-wishlist-btn:hover {
+  color: var(--dm-brand-accent);
+  background-color: #FFFFFF;
+  transform: scale(1.06);
+}
+
+.dm-wishlist-btn.is-active {
+  color: var(--dm-brand-accent);
+  background-color: var(--dm-brand-accent-soft);
+  border-color: var(--dm-brand-accent);
+}
+
+.dm-wishlist-btn.is-active svg {
+  fill: currentColor;
+}
+
+/* Product Card Body */
+.dm-product-card__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  padding: 0.95rem 1rem 1rem;
+  gap: 0.45rem;
+}
+
+.dm-product-card__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: var(--dm-text-2xs);
+  color: var(--dm-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.dm-product-card__category {
+  font-weight: 600;
+  color: var(--dm-brand-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dm-product-card__sku {
+  font-family: var(--dm-font-mono);
+  flex-shrink: 0;
+}
+
+.dm-product-card__title {
+  font-family: var(--dm-font-sans);
+  font-size: var(--dm-text-sm);
+  font-weight: 600;
+  line-height: 1.38;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.75em;
+}
+
+.dm-product-card__title a:hover {
+  color: var(--dm-brand-primary);
+}
+
+/* Availability Badge */
+.dm-stock-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+  margin-top: 0.1rem;
+}
+
+.dm-stock-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.dm-stock-badge::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.dm-stock-badge--in_stock {
+  color: var(--dm-status-success);
+}
+.dm-stock-badge--in_stock::before {
+  background-color: var(--dm-status-success);
+}
+
+.dm-stock-badge--low_stock {
+  color: var(--dm-status-warning);
+}
+.dm-stock-badge--low_stock::before {
+  background-color: var(--dm-status-warning);
+}
+
+.dm-stock-badge--out_of_stock {
+  color: var(--dm-status-danger);
+}
+.dm-stock-badge--out_of_stock::before {
+  background-color: var(--dm-status-danger);
+}
+
+/* Price & Genuine Discount Row */
+.dm-product-card__footer {
+  margin-top: auto;
+  padding-top: 0.55rem;
+  border-top: 1px solid var(--dm-border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.dm-price-group {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  font-family: var(--dm-font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.dm-price-current {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--dm-text-primary);
+  text-decoration: none;
+}
+
+.dm-price-original {
+  font-size: 0.8rem;
+  color: var(--dm-text-muted);
+  text-decoration: line-through;
+}
+
+.dm-price-save {
+  font-family: var(--dm-font-sans);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--dm-brand-accent);
+  margin-left: auto;
+}
+
+/* Functional Add to Cart Button inside Card */
+.dm-card-cart-btn {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.6rem 0.85rem;
+  border-radius: var(--dm-radius-sm);
+  background-color: var(--dm-brand-primary);
+  color: #FFFFFF;
+  font-size: var(--dm-text-xs);
+  font-weight: 600;
+  transition: background-color var(--dm-duration-fast) ease;
+}
+
+.dm-card-cart-btn:hover:not(:disabled) {
+  background-color: var(--dm-brand-primary-hover);
+}
+
+.dm-card-cart-btn:disabled {
+  background-color: var(--dm-bg-subtle);
+  color: var(--dm-text-muted);
+  border: 1px solid var(--dm-border-subtle);
+  cursor: not-allowed;
+}
+
+/* Non-Obstructive Toast Feedback */
+.dm-toast-region {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  z-index: 1200;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: min(92vw, 380px);
+  pointer-events: none;
+}
+
+.dm-toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--dm-space-3);
+  padding: 0.85rem 1rem;
+  border-radius: var(--dm-radius-md);
+  background-color: var(--dm-bg-dark);
+  color: #FFFFFF;
+  border-left: 4px solid var(--dm-brand-accent);
+  box-shadow: var(--dm-shadow-lg);
+  font-size: var(--dm-text-sm);
+}
+
+.dm-toast__action {
+  color: #F4C987;
+  font-weight: 700;
+  font-size: var(--dm-text-xs);
+  text-decoration: underline;
+  white-space: nowrap;
+}
+
+/* Mobile Card Compact Refinements */
+@media (max-width: 640px) {
+  .dm-product-card__badges {
+    top: 0.45rem;
+    left: 0.45rem;
+    right: 2.3rem;
+    gap: 0.2rem;
+  }
+
+  .dm-pill {
+    padding: 0.14rem 0.38rem;
+    font-size: 0.58rem;
+  }
+
+  .dm-product-card__wishlist-form {
+    top: 0.4rem;
+    right: 0.4rem;
+  }
+
+  .dm-wishlist-btn {
+    width: 1.85rem;
+    height: 1.85rem;
+  }
+
+  .dm-product-card__body {
+    padding: 0.7rem 0.75rem 0.8rem;
+    gap: 0.35rem;
+  }
+
+  .dm-product-card__title {
+    font-size: 0.82rem;
+  }
+
+  .dm-price-current {
+    font-size: 0.92rem;
+  }
+
+  .dm-price-save {
+    display: none;
+  }
+
+  .dm-card-cart-btn {
+    padding: 0.52rem 0.6rem;
+    font-size: 0.75rem;
+  }
+}

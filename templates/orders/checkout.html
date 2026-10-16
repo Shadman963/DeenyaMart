@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Cash on Delivery Checkout — DeenyaMart{% endblock %}
+{% block content %}
+<div class="dm-container" style="padding-block: 2.5rem 4rem; max-width: 960px;">
+  <h1 style="font-size: var(--dm-text-2xl); margin-bottom: 1.5rem;">Cash on Delivery Checkout</h1>
+  <div class="dm-pdp-grid">
+    <form method="post" style="background: var(--dm-bg-surface); padding: 2rem; border-radius: var(--dm-radius-lg); border: 1px solid var(--dm-border-subtle); display: flex; flex-direction: column; gap: 1rem;">
+      {% csrf_token %}
+      <div>
+        <label for="cust-name" style="display: block; font-size: var(--dm-text-xs); font-weight: 600; margin-bottom: 0.35rem;">Full Name *</label>
+        <input id="cust-name" type="text" name="customer_name" required style="width: 100%; padding: 0.7rem; border-radius: var(--dm-radius-sm); border: 1px solid var(--dm-border-strong);">
+      </div>
+      <div>
+        <label for="cust-phone" style="display: block; font-size: var(--dm-text-xs); font-weight: 600; margin-bottom: 0.35rem;">Bangladesh Mobile Number *</label>
+        <input id="cust-phone" type="tel" name="customer_phone" required placeholder="017XXXXXXXX" style="width: 100%; padding: 0.7rem; border-radius: var(--dm-radius-sm); border: 1px solid var(--dm-border-strong);">
+      </div>
+      <div>
+        <label for="ship-zone" style="display: block; font-size: var(--dm-text-xs); font-weight: 600; margin-bottom: 0.35rem;">Delivery Area *</label>
+        <select id="ship-zone" name="shipping_zone_id" style="width: 100%; padding: 0.7rem; border-radius: var(--dm-radius-sm); border: 1px solid var(--dm-border-strong); background: var(--dm-bg-canvas);">
+          {% for zone in shipping_zones %}
+          <option value="{{ zone.id }}">{{ zone.name }} — ৳{{ zone.base_rate|floatformat:0 }} ({{ zone.estimated_delivery_days }})</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label for="ship-addr" style="display: block; font-size: var(--dm-text-xs); font-weight: 600; margin-bottom: 0.35rem;">Full Delivery Address (House, Road, Area, District) *</label>
+        <textarea id="ship-addr" name="shipping_address" rows="3" required style="width: 100%; padding: 0.7rem; border-radius: var(--dm-radius-sm); border: 1px solid var(--dm-border-strong);"></textarea>
+      </div>
+      <div style="padding: 0.75rem; background: var(--dm-bg-subtle); border-radius: var(--dm-radius-sm); font-size: var(--dm-text-xs);">
+        <strong>Payment Method:</strong> Cash on Delivery (Pay upon receiving your parcel)
+      </div>
+      <button type="submit" class="dm-btn dm-btn--primary">Confirm Order (Cash on Delivery)</button>
+    </form>
+
+    <div style="background: var(--dm-bg-surface); padding: 2rem; border-radius: var(--dm-radius-lg); border: 1px solid var(--dm-border-subtle);">
+      <h2 style="font-size: var(--dm-text-lg); margin-bottom: 1rem;">Order Summary</h2>
+      {% include "cart/partials/cart_drawer_body.html" %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1050" fill="none">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="900" y2="1050" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F3EDE0"/>
+      <stop offset="55%" stop-color="#E8DFCE"/>
+      <stop offset="100%" stop-color="#DDD1BC"/>
+    </linearGradient>
+    <linearGradient id="archGrad" x1="180" y1="120" x2="720" y2="950" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0B4F3F"/>
+      <stop offset="100%" stop-color="#07352A"/>
+    </linearGradient>
+    <linearGradient id="terracottaGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#D47A3B"/>
+      <stop offset="100%" stop-color="#B35920"/>
+    </linearGradient>
+    <pattern id="linenWeave" width="16" height="16" patternUnits="userSpaceOnUse">
+      <path d="M0 8H16M8 0V16" stroke="#14231E" stroke-opacity="0.035" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="900" height="1050" fill="url(#bgGrad)"/>
+  <rect width="900" height="1050" fill="url(#linenWeave)"/>
+  <!-- Architectural Arch Backdrop -->
+  <path d="M165 960V410C165 252.6 292.6 125 450 125C607.4 125 735 252.6 735 410V960H165Z" fill="url(#archGrad)"/>
+  <path d="M190 960V415C190 271.4 306.4 155 450 155C593.6 155 710 271.4 710 415V960" stroke="#C88A36" stroke-opacity="0.45" stroke-width="2"/>
+  <!-- Ambient Warm Sun Disc -->
+  <circle cx="570" cy="310" r="96" fill="#C86D2D" fill-opacity="0.88"/>
+  <circle cx="570" cy="310" r="118" stroke="#C88A36" stroke-opacity="0.35" stroke-width="1.5" stroke-dasharray="4 6"/>
+  <!-- Editorial Draped Modest Silhouette (Left Figure - Linen Khimar) -->
+  <path d="M250 960L285 470C292 385 345 330 415 330C485 330 538 385 548 470L590 960H250Z" fill="#FAF7F2"/>
+  <path d="M285 470C315 520 375 550 455 540C510 532 540 500 548 470" stroke="#D8CEBE" stroke-width="3" fill="none"/>
+  <path d="M335 390C335 345 370 310 415 310C460 310 495 345 495 390C495 455 455 505 415 505C375 505 335 455 335 390Z" fill="#EFE8DA" stroke="#D5CBB8" stroke-width="2"/>
+  <!-- Drape Fold Lines -->
+  <path d="M355 530L330 960" stroke="#DED5C5" stroke-width="2.5"/>
+  <path d="M415 545L410 960" stroke="#DED5C5" stroke-width="2.5"/>
+  <path d="M475 535L505 960" stroke="#DED5C5" stroke-width="2.5"/>
+  <!-- Secondary Terracotta Layered Shawl Accent -->
+  <path d="M450 435C525 435 585 495 605 595L665 960H495L465 570C460 510 445 465 450 435Z" fill="url(#terracottaGrad)"/>
+  <path d="M525 540L575 960" stroke="#FAF7F2" stroke-opacity="0.25" stroke-width="2"/>
+  <!-- Botanical Olive & Cypress Sprig -->
+  <g stroke="#C88A36" stroke-width="2" fill="none" opacity="0.85">
+    <path d="M195 790C235 720 265 640 275 540"/>
+    <ellipse cx="225" cy="705" rx="18" ry="8" transform="rotate(-30 225 705)" fill="#C88A36" fill-opacity="0.25"/>
+    <ellipse cx="255" cy="645" rx="18" ry="8" transform="rotate(-20 255 645)" fill="#C88A36" fill-opacity="0.25"/>
+    <ellipse cx="235" cy="605" rx="16" ry="7" transform="rotate(25 235 605)" fill="#C88A36" fill-opacity="0.25"/>
+  </g>
+  <!-- Editorial Caption Stamp inside Illustration -->
+  <rect x="64" y="64" width="250" height="44" rx="22" fill="#FAF7F2" fill-opacity="0.92" stroke="#E2DDD2"/>
+  <circle cx="88" cy="86" r="5" fill="#0B4F3F"/>
+  <text x="104" y="91" fill="#14231E" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="600" letter-spacing="0.08em">DEENYAMART ATELIER</text>
+</svg>

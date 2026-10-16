@@ -1,0 +1,62 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ site_settings.site_name|default:"DeenyaMart" }} — {{ site_settings.tagline|default:"Thoughtful Modest Wear & Everyday Essentials" }}{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}{{ site_settings.tagline|default:"Curated modest wear, linen khimars, pure cotton panjabis, and household essentials delivered across Bangladesh." }}{% endblock %}">
+  <link rel="icon" type="image/svg+xml" href="{% static 'img/favicon.svg' %}">
+
+  <!-- DeenyaMart Design System CSS -->
+  <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/layout.css' %}">
+  <link rel="stylesheet" href="{% static 'css/components.css' %}">
+  <link rel="stylesheet" href="{% static 'css/pages.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <a href="#main-content" class="dm-skip-link">Skip to main content</a>
+
+  <!-- 1. Slim Configurable Announcement Bar -->
+  {% include "includes/_topbar.html" %}
+
+  <!-- 2 & 3. Sticky Header + Dynamic Desktop Category Navigation -->
+  {% include "includes/_header.html" %}
+
+  <!-- Server-Side Flash Messages -->
+  {% if messages %}
+  <div class="dm-container" style="margin-top: 1rem;" role="region" aria-label="Notifications">
+    {% for message in messages %}
+    <div style="padding: 0.75rem 1rem; margin-bottom: 0.5rem; border-radius: var(--dm-radius-sm); background-color: var(--dm-bg-surface); border: 1px solid var(--dm-border-strong); border-left: 4px solid var(--dm-brand-primary); font-size: var(--dm-text-sm); display: flex; align-items: center; justify-content: space-between;">
+      <span>{{ message }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Main Content Landmark -->
+  <main id="main-content" tabindex="-1">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- 11. Complete Storefront Footer -->
+  {% include "includes/_footer.html" %}
+
+  <!-- Accessible Mobile Menu Drawer (<dialog>) -->
+  {% include "includes/_mobile_drawer.html" %}
+
+  <!-- Accessible Slide-Over Shopping Bag Drawer (<dialog>) -->
+  {% include "includes/_cart_drawer.html" %}
+
+  <!-- Screen Reader Live Region & Non-Obstructive Toast Container -->
+  <div id="dm-live-region" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <div id="dm-toast-region" class="dm-toast-region" aria-label="Cart and storefront notifications"></div>
+
+  <!-- Vanilla ES6 Storefront Scripts -->
+  <script src="{% static 'js/main.js' %}" defer></script>
+  <script src="{% static 'js/search.js' %}" defer></script>
+  <script src="{% static 'js/cart.js' %}" defer></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

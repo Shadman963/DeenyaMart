@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Your Shopping Bag — DeenyaMart{% endblock %}
+{% block content %}
+<div class="dm-container" style="padding-block: 3rem 4rem; max-width: 820px;">
+  <h1 style="font-size: var(--dm-text-2xl); margin-bottom: 1.5rem;">Your Shopping Bag</h1>
+  <div style="background: var(--dm-bg-surface); border: 1px solid var(--dm-border-subtle); border-radius: var(--dm-radius-lg); padding: 2rem;">
+    {% include "cart/partials/cart_drawer_body.html" %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,113 @@
+{% with primary=product.primary_image secondary=product.secondary_image variant=product.default_variant %}
+<article class="dm-product-card">
+  <!-- Media Frame (4:5 Ratio, Cover for Modest Wear, Contain for Technical/Home Hardware) -->
+  <div class="dm-product-card__media dm-product-card__media--{{ product.image_fit|default:'cover' }}">
+    <a href="{{ product.get_absolute_url }}" class="dm-product-card__media-link" tabindex="-1" aria-hidden="true">
+      <img
+        src="{{ primary.image_url|default:'/static/img/fixtures/lf104-primary.svg' }}"
+        alt="{{ primary.alt_text|default:product.name }}"
+        width="600"
+        height="750"
+        loading="{{ image_loading|default:'lazy' }}"
+        decoding="async"
+        class="dm-product-card__img dm-product-card__img--primary {% if secondary %}has-secondary{% endif %}"
+      >
+      {% if secondary %}
+      <img
+        src="{{ secondary.image_url }}"
+        alt="{{ secondary.alt_text|default:product.name }}"
+        width="600"
+        height="750"
+        loading="lazy"
+        decoding="async"
+        class="dm-product-card__img dm-product-card__img--secondary"
+      >
+      {% endif %}
+    </a>
+
+    <!-- Genuine Discount, Fabric, and Dev Fixture Badges -->
+    <div class="dm-product-card__badges">
+      {% if product.has_valid_discount %}
+      <span class="dm-pill dm-pill--discount dm-tabular">−{{ product.discount_percentage }}%</span>
+      {% endif %}
+      {% if product.brand %}
+      <span class="dm-pill dm-pill--fabric">{{ product.brand.name }}</span>
+      {% endif %}
+      {% if product.is_development_fixture %}
+      <span class="dm-pill dm-pill--fixture" title="Development fixture awaiting live catalog import">Fixture</span>
+      {% endif %}
+    </div>
+
+    <!-- Functional Wishlist Toggle Button -->
+    <form action="{% url 'accounts:wishlist_toggle' %}" method="post" class="dm-product-card__wishlist-form js-wishlist-form">
+      {% csrf_token %}
+      <input type="hidden" name="product_id" value="{{ product.id }}">
+      <button
+        type="submit"
+        class="dm-wishlist-btn {% if product.id in wishlist_product_ids %}is-active{% endif %}"
+        aria-pressed="{% if product.id in wishlist_product_ids %}true{% else %}false{% endif %}"
+        aria-label="Save {{ product.name }} to wishlist"
+      >
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+        </svg>
+      </button>
+    </form>
+  </div>
+
+  <!-- Product Details Body -->
+  <div class="dm-product-card__body">
+    <div class="dm-product-card__meta">
+      <a href="{{ product.category.get_absolute_url }}" class="dm-product-card__category">{{ product.category.name }}</a>
+      <span class="dm-product-card__sku">{{ product.sku_prefix }}</span>
+    </div>
+
+    <h3 class="dm-product-card__title">
+      <a href="{{ product.get_absolute_url }}">{{ product.name }}</a>
+    </h3>
+
+    <!-- Real Availability State & Verified Review Summary (only if real reviews exist) -->
+    <div class="dm-stock-row">
+      <span class="dm-stock-badge dm-stock-badge--{{ product.availability_state }}">
+        {{ product.availability_label }}
+      </span>
+      {% if product.rating_count > 0 %}
+      <span class="dm-tabular" style="font-size: 0.72rem; color: var(--dm-text-secondary);">
+        ★ {{ product.rating_avg }} ({{ product.rating_count }})
+      </span>
+      {% endif %}
+    </div>
+
+    <!-- Price Block & Functional Add to Cart -->
+    <div class="dm-product-card__footer">
+      <div class="dm-price-group">
+        <ins class="dm-price-current">৳{{ product.current_price|floatformat:0 }}</ins>
+        {% if product.has_valid_discount %}
+        <del class="dm-price-original">৳{{ product.original_price|floatformat:0 }}</del>
+        <span class="dm-price-save">Save ৳{{ product.discount_savings|floatformat:0 }}</span>
+        {% endif %}
+      </div>
+
+      {% if product.is_in_stock and variant %}
+      <form action="{% url 'cart:add' %}" method="post" class="js-add-to-cart-form">
+        {% csrf_token %}
+        <input type="hidden" name="variant_id" value="{{ variant.id }}">
+        <input type="hidden" name="quantity" value="1">
+        <button type="submit" class="dm-card-cart-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          <span>Add to Cart</span>
+        </button>
+      </form>
+      {% else %}
+      <button type="button" class="dm-card-cart-btn" disabled aria-disabled="true">
+        <span>Out of Stock</span>
+      </button>
+      {% endif %}
+    </div>
+  </div>
+</article>
+{% endwith %}

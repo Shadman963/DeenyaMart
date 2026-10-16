@@ -1,0 +1,124 @@
+<footer class="dm-footer" aria-label="Site Footer">
+  <div class="dm-container">
+    <div class="dm-footer__grid">
+      <!-- Column 1: Brand Identity & Verified Contact -->
+      <div>
+        <a href="{% url 'core:home' %}" class="dm-brand" style="margin-bottom: 1rem;">
+          <svg class="dm-brand__emblem" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+            <rect width="64" height="64" rx="14" fill="#0B4F3F"/>
+            <path d="M32 10L38.5 19.5L49.5 16.5L46.5 27.5L56 34L46.5 40.5L49.5 51.5L38.5 48.5L32 58L25.5 48.5L14.5 51.5L17.5 40.5L8 34L17.5 27.5L14.5 16.5L25.5 19.5L32 10Z" stroke="#C88A36" stroke-width="2" fill="#083B2F"/>
+            <path d="M23 42V29C23 24.0294 27.0294 20 32 20C36.9706 20 41 24.0294 41 29V42H23Z" stroke="#FAF7F2" stroke-width="2.5"/>
+            <circle cx="32" cy="29" r="3" fill="#C86D2D"/>
+          </svg>
+          <span class="dm-brand__text">
+            <span class="dm-brand__wordmark" style="color: #FAF7F2;">Deenya<span style="color: #9ED5C5;">Mart</span><span class="dm-brand__dot">.</span></span>
+          </span>
+        </a>
+        <p style="font-size: var(--dm-text-sm); color: var(--dm-text-on-dark-muted); max-width: 38ch; margin-bottom: 1.25rem;">
+          {{ site_settings.tagline|default:"Thoughtful Modest Wear & Everyday Essentials, Delivered Across Bangladesh." }}
+        </p>
+
+        <div class="dm-footer__contact-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C88A36" stroke-width="2" style="flex-shrink: 0; margin-top: 3px;" aria-hidden="true">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+          <span>{{ site_settings.headquarters_address|default:"House 14, Road 7, Sector 4, Uttara, Dhaka-1230, Bangladesh" }}</span>
+        </div>
+        <div class="dm-footer__contact-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C88A36" stroke-width="2" style="flex-shrink: 0; margin-top: 3px;" aria-hidden="true">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+          <span class="dm-tabular">{{ site_settings.support_phone|default:"+880 1700-000000" }} · {{ site_settings.support_hours|default:"Sat – Thu, 10 AM – 8 PM" }}</span>
+        </div>
+        <div class="dm-footer__contact-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C88A36" stroke-width="2" style="flex-shrink: 0; margin-top: 3px;" aria-hidden="true">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+            <polyline points="22,6 12,13 2,6"></polyline>
+          </svg>
+          <a href="mailto:{{ site_settings.support_email|default:'care@deenyamart.com' }}" class="dm-footer__link">{{ site_settings.support_email|default:"care@deenyamart.com" }}</a>
+        </div>
+
+        <!-- Social Links Rendered Only When Configured -->
+        {% if site_settings.facebook_url or site_settings.instagram_url or site_settings.youtube_url %}
+        <div class="dm-footer__socials" aria-label="Social Media Links">
+          {% if site_settings.facebook_url %}
+          <a href="{{ site_settings.facebook_url }}" class="dm-footer__social-link" target="_blank" rel="noopener noreferrer" aria-label="DeenyaMart on Facebook">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+            </svg>
+          </a>
+          {% endif %}
+          {% if site_settings.instagram_url %}
+          <a href="{{ site_settings.instagram_url }}" class="dm-footer__social-link" target="_blank" rel="noopener noreferrer" aria-label="DeenyaMart on Instagram">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+          </a>
+          {% endif %}
+          {% if site_settings.youtube_url %}
+          <a href="{{ site_settings.youtube_url }}" class="dm-footer__social-link" target="_blank" rel="noopener noreferrer" aria-label="DeenyaMart on YouTube">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+          </a>
+          {% endif %}
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Column 2: Dynamic Catalog Categories -->
+      <div>
+        <h3 class="dm-footer__heading">Catalog Categories</h3>
+        <ul class="dm-footer__list">
+          {% for category in nav_categories %}
+          <li>
+            <a href="{{ category.get_absolute_url }}" class="dm-footer__link">{{ category.name }}</a>
+          </li>
+          {% endfor %}
+          <li>
+            <a href="{% url 'catalog:product_list' %}?sort=newest" class="dm-footer__link">New Arrivals</a>
+          </li>
+          <li>
+            <a href="{% url 'catalog:product_list' %}?on_sale=1" class="dm-footer__link">Value Offers</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Column 3: Customer Care & Order Services -->
+      <div>
+        <h3 class="dm-footer__heading">Customer Services</h3>
+        <ul class="dm-footer__list">
+          <li><a href="{% url 'orders:track' %}" class="dm-footer__link">Track Your Order</a></li>
+          <li><a href="{% url 'cart:detail' %}" class="dm-footer__link">Shopping Bag</a></li>
+          <li><a href="{% url 'accounts:wishlist' %}" class="dm-footer__link">Saved Wishlist</a></li>
+          <li><a href="{% url 'accounts:dashboard' %}" class="dm-footer__link">My Account</a></li>
+          <li><a href="{% url 'core:contact' %}" class="dm-footer__link">Contact Customer Care</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 4: Policies & Verified Fulfillment -->
+      <div>
+        <h3 class="dm-footer__heading">Store Policies</h3>
+        <ul class="dm-footer__list">
+          <li><a href="{% url 'core:page_detail' slug='about-us' %}" class="dm-footer__link">About DeenyaMart</a></li>
+          <li><a href="{% url 'core:page_detail' slug='shipping-policy' %}" class="dm-footer__link">Delivery &amp; COD Guidelines</a></li>
+          <li><a href="{% url 'core:page_detail' slug='return-policy' %}" class="dm-footer__link">7-Day Exchange &amp; Return Policy</a></li>
+          <li><a href="{% url 'core:page_detail' slug='privacy-policy' %}" class="dm-footer__link">Privacy Policy</a></li>
+          <li><a href="{% url 'core:page_detail' slug='terms-and-conditions' %}" class="dm-footer__link">Terms &amp; Conditions</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="dm-footer__bottom">
+      <span>&copy; {% now "Y" %} {{ site_settings.site_name|default:"DeenyaMart" }}. All rights reserved. Prices in BDT (৳).</span>
+      <div class="dm-footer__badges">
+        <span class="dm-footer__pill">Verified Payment: Cash on Delivery (COD)</span>
+        <span class="dm-footer__pill">Inside Dhaka: ৳60</span>
+        <span class="dm-footer__pill">Outside Dhaka: ৳120</span>
+      </div>
+    </div>
+  </div>
+</footer>

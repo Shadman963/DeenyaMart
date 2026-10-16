@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category.name }} — {{ site_settings.site_name|default:"DeenyaMart" }}{% endblock %}
+
+{% block content %}
+<div class="dm-page-header">
+  <div class="dm-container">
+    <nav class="dm-breadcrumbs" aria-label="Breadcrumb">
+      <a href="{% url 'core:home' %}">Home</a>
+      <span>/</span>
+      <a href="{% url 'catalog:product_list' %}">Catalog</a>
+      {% if parent_category %}
+      <span>/</span>
+      <a href="{{ parent_category.get_absolute_url }}">{{ parent_category.name }}</a>
+      {% endif %}
+      <span>/</span>
+      <span aria-current="page">{{ category.name }}</span>
+    </nav>
+    <h1 style="font-size: var(--dm-text-2xl); margin-bottom: 0.35rem;">{{ category.name }}</h1>
+    {% if category.subtitle or category.description %}
+    <p style="color: var(--dm-text-secondary); font-size: var(--dm-text-sm); max-width: 65ch; margin: 0;">
+      {{ category.description|default:category.subtitle }}
+    </p>
+    {% endif %}
+
+    {% if subcategories %}
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;">
+      {% for sub in subcategories %}
+      <a href="{{ sub.get_absolute_url }}" class="dm-btn dm-btn--outline dm-btn--sm" style="background: var(--dm-bg-surface);">{{ sub.name }}</a>
+      {% endfor %}
+    </div>
+    {% elif sibling_categories %}
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;">
+      <a href="{{ parent_category.get_absolute_url }}" class="dm-btn dm-btn--outline dm-btn--sm">All {{ parent_category.name }}</a>
+      {% for sib in sibling_categories %}
+      <a href="{{ sib.get_absolute_url }}" class="dm-btn {% if sib.id == category.id %}dm-btn--primary{% else %}dm-btn--outline{% endif %} dm-btn--sm">{{ sib.name }}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="dm-container" style="padding-bottom: 4rem;">
+  <div class="dm-product-grid">
+    {% for product in products %}
+      {% include "components/_product_card.html" with product=product %}
+    {% empty %}
+      <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; background: var(--dm-bg-surface); border-radius: var(--dm-radius-md); border: 1px solid var(--dm-border-subtle);">
+        <p style="font-size: var(--dm-text-lg); font-weight: 600;">No products are currently listed in {{ category.name }}.</p>
+        <a href="{% url 'catalog:product_list' %}" class="dm-btn dm-btn--primary dm-btn--sm">Browse All Collections</a>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

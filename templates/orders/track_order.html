@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Track Your Order — DeenyaMart{% endblock %}
+{% block content %}
+<div class="dm-container" style="padding-block: 3rem 4rem; max-width: 680px;">
+  <div style="background: var(--dm-bg-surface); border: 1px solid var(--dm-border-subtle); border-radius: var(--dm-radius-lg); padding: 2.25rem;">
+    <h1 style="font-size: var(--dm-text-2xl); margin-bottom: 0.5rem;">Track Your Order</h1>
+    <p style="color: var(--dm-text-secondary); font-size: var(--dm-text-sm); margin-bottom: 1.5rem;">
+      Enter your DeenyaMart Order Number (e.g., <code style="font-family: var(--dm-font-mono);">DM-2026...</code>) to check live fulfillment status.
+    </p>
+    <form method="get" action="{% url 'orders:track' %}" style="display: flex; gap: 0.65rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+      <label for="order-num-input" class="sr-only">Order Number</label>
+      <input id="order-num-input" type="text" name="order_number" value="{{ query_order }}" placeholder="Enter Order Number (e.g. DM-20261017...)" required style="flex: 1 1 220px; padding: 0.75rem 1rem; border-radius: var(--dm-radius-pill); border: 1px solid var(--dm-border-strong);">
+      <button type="submit" class="dm-btn dm-btn--primary">Check Status</button>
+    </form>
+
+    {% if order %}
+    <div style="padding: 1.25rem; border-radius: var(--dm-radius-md); background: var(--dm-bg-subtle); border: 1px solid var(--dm-border-strong);">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+        <strong>Order {{ order.order_number }}</strong>
+        <span class="dm-pill dm-pill--discount">{{ order.get_status_display }}</span>
+      </div>
+      <p style="font-size: var(--dm-text-xs); color: var(--dm-text-secondary); margin-bottom: 0.75rem;">
+        Recipient: {{ order.customer_name }} · {{ order.shipping_zone.name }} · Grand Total: <strong>৳{{ order.grand_total|floatformat:0 }} (COD)</strong>
+      </p>
+    </div>
+    {% elif query_order %}
+    <p style="color: var(--dm-status-danger); font-size: var(--dm-text-sm); margin: 0;">
+      No order found matching "{{ query_order }}". Please verify the order number from your confirmation receipt.
+    </p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
