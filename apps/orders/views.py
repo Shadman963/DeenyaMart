@@ -1,14 +1,17 @@
 """Views for checkout, order confirmation, and public order tracking."""
 from decimal import Decimal
 from django.contrib import messages
+from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views import View
 
 from apps.cart.services import CartService
+from apps.catalog.services import InventoryService
 from apps.shipping.models import ShippingZone
 from .models import Order, OrderItem
+
 
 
 class CheckoutView(View):
@@ -57,37 +60,57 @@ class CheckoutView(View):
         timestamp = timezone.now().strftime("%Y%m%d%H%M%S")
         order_number = f"DM-{timestamp}"
 
-        with transaction.atomic():
-            order = Order.objects.create(
-                order_number=order_number,
-                user=request.user if request.user.is_authenticated else None,
-                customer_name=customer_name,
-                customer_phone=customer_phone,
-                shipping_address_line=shipping_address,
-                shipping_district=shipping_district,
-                shipping_zone=zone,
-                subtotal_amount=subtotal,
-                shipping_amount=shipping_fee,
-                grand_total=grand_total,
-                status="CONFIRMED",
-                payment_method="COD",
-            )
-            for item in summary["items"]:
-                OrderItem.objects.create(
-                    order=order,
-                    product=item.variant.product,
-                    variant=item.variant,
-                    product_name_snapshot=item.variant.product.name,
-                    variant_label_snapshot=item.variant.display_label,
-                    sku_snapshot=item.variant.sku,
-                    unit_retail_price=item.unit_price,
-                    quantity=item.quantity,
-                    line_total=item.line_total,
+        try:
+            with transaction.atomic():
+                verified_lines = []
+                subtotal = Decimal("0.00")
+                for item in summary["items"]:
+                    variant = InventoryService.decrement_variant_stock(
+                        item.variant_id,
+                        item.quantity,
+                        from_reserved=False,
+                    )
+                    unit_price = variant.effective_price
+                    line_total = unit_price * Decimal(item.quantity)
+                    subtotal += line_total
+                    verified_lines.append((variant, item.quantity, unit_price, line_total))
+
+                grand_total = subtotal + shipping_fee
+                order = Order.objects.create(
+                    order_number=order_number,
+                    user=request.user if request.user.is_authenticated else None,
+                    customer_name=customer_name,
+                    customer_phone=customer_phone,
+                    shipping_address_line=shipping_address,
+                    shipping_district=shipping_district,
+                    shipping_zone=zone,
+                    subtotal_amount=subtotal,
+                    shipping_amount=shipping_fee,
+                    grand_total=grand_total,
+                    status="CONFIRMED",
+                    payment_method="COD",
                 )
-            cart.items.all().delete()
+                for variant, qty, unit_price, line_total in verified_lines:
+                    OrderItem.objects.create(
+                        order=order,
+                        product=variant.product,
+                        variant=variant,
+                        product_name_snapshot=variant.product.name,
+                        variant_label_snapshot=variant.display_label,
+                        sku_snapshot=variant.sku,
+                        unit_retail_price=unit_price,
+                        quantity=qty,
+                        line_total=line_total,
+                    )
+                cart.items.all().delete()
+        except ValidationError as exc:
+            err_msg = exc.messages[0] if getattr(exc, "messages", None) else str(exc)
+            messages.error(request, err_msg)
+            return redirect("orders:checkout")
 
         messages.success(request, f"Order {order.order_number} confirmed for Cash on Delivery!")
         return redirect("orders:track_detail", order_number=order.order_number)
+
 
 
 class OrderTrackView(View):

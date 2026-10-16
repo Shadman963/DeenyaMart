@@ -4,7 +4,7 @@
   <div class="dm-product-card__media dm-product-card__media--{{ product.image_fit|default:'cover' }}">
     <a href="{{ product.get_absolute_url }}" class="dm-product-card__media-link" tabindex="-1" aria-hidden="true">
       <img
-        src="{{ primary.image_url|default:'/static/img/fixtures/lf104-primary.svg' }}"
+        src="{{ primary.resolved_url|default:'/static/img/fixtures/lf104-primary.svg' }}"
         alt="{{ primary.alt_text|default:product.name }}"
         width="600"
         height="750"
@@ -14,7 +14,7 @@
       >
       {% if secondary %}
       <img
-        src="{{ secondary.image_url }}"
+        src="{{ secondary.resolved_url }}"
         alt="{{ secondary.alt_text|default:product.name }}"
         width="600"
         height="750"
@@ -24,6 +24,7 @@
       >
       {% endif %}
     </a>
+
 
     <!-- Genuine Discount, Fabric, and Dev Fixture Badges -->
     <div class="dm-product-card__badges">

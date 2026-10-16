@@ -60,19 +60,21 @@ class CartItem(TimeStampedModel):
 
     @property
     def unit_price(self) -> Decimal:
-        return self.variant.retail_price
+        return self.variant.effective_price
 
     @property
     def compare_at_price(self):
+        eff = self.unit_price
         if (
             self.variant.compare_at_price
-            and self.variant.compare_at_price > self.variant.retail_price
+            and self.variant.compare_at_price > eff
         ):
             return self.variant.compare_at_price
-        if self.variant.product.has_valid_discount:
-            return self.variant.product.base_regular_price
+        if self.variant.product.has_valid_discount and self.variant.product.original_price > eff:
+            return self.variant.product.original_price
         return None
 
     @property
     def line_total(self) -> Decimal:
         return self.unit_price * Decimal(self.quantity)
+

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ category.name }} — {{ site_settings.site_name|default:"DeenyaMart" }}{% endblock %}
+{% block title %}{{ category.seo_title|default:category.name }} — {{ site_settings.site_name|default:"DeenyaMart" }}{% endblock %}
 
 {% block content %}
 <div class="dm-page-header">
@@ -24,13 +24,13 @@
     {% endif %}
 
     {% if subcategories %}
-    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;" aria-label="{{ category.name }} subcategories">
       {% for sub in subcategories %}
       <a href="{{ sub.get_absolute_url }}" class="dm-btn dm-btn--outline dm-btn--sm" style="background: var(--dm-bg-surface);">{{ sub.name }}</a>
       {% endfor %}
     </div>
     {% elif sibling_categories %}
-    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;">
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem;" aria-label="{{ parent_category.name }} categories">
       <a href="{{ parent_category.get_absolute_url }}" class="dm-btn dm-btn--outline dm-btn--sm">All {{ parent_category.name }}</a>
       {% for sib in sibling_categories %}
       <a href="{{ sib.get_absolute_url }}" class="dm-btn {% if sib.id == category.id %}dm-btn--primary{% else %}dm-btn--outline{% endif %} dm-btn--sm">{{ sib.name }}</a>
@@ -41,15 +41,79 @@
 </div>
 
 <div class="dm-container" style="padding-bottom: 4rem;">
+  <div class="dm-filter-toolbar" style="flex-direction: column; align-items: stretch; gap: 0.85rem;">
+    <form method="get" action="{{ category.get_absolute_url }}" style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0.75rem;">
+      <div>
+        <label for="cat-min-price" style="display: block; font-size: var(--dm-text-xs); font-weight: 600; margin-bottom: 0.25rem;">Min ({{ store_currency_symbol|default:"৳" }})</label>
+        <input
+          type="number"
+          id="cat-min-price"
+          name="min_price"
+          min="0"
+          step="1"
+          value="{{ min_price|default_if_none:'' }}"
+          placeholder="0"
+          style="width: 105px; padding: 0.4rem 0.6rem; border-radius: var(--dm-radius-sm); border: 1px solid var(--dm-border-strong); background: var(--dm-bg-surface); font-size: var(--dm-text-xs);"
+        >
+      </div>
+
+      <div>
+        <label for="cat-max-price" style="display: block; font-size: var(--dm-text-xs); font-weight: 600; margin-bottom: 0.25rem;">Max ({{ store_currency_symbol|default:"৳" }})</label>
+        <input
+          type="number"
+          id="cat-max-price"
+          name="max_price"
+          min="0"
+          step="1"
+          value="{{ max_price|default_if_none:'' }}"
+          placeholder="5000"
+          style="width: 105px; padding: 0.4rem 0.6rem; border-radius: var(--dm-radius-sm); border: 1px solid var(--dm-border-strong); background: var(--dm-bg-surface); font-size: var(--dm-text-xs);"
+        >
+      </div>
+
+      <div>
+        <label for="cat-availability" style="display: block; font-size: var(--dm-text-xs); font-weight: 600; margin-bottom: 0.25rem;">Availability</label>
+        <select id="cat-availability" name="availability" style="padding: 0.4rem 0.65rem; border-radius: var(--dm-radius-sm); border: 1px solid var(--dm-border-strong); background: var(--dm-bg-surface); font-size: var(--dm-text-xs);">
+          <option value="" {% if not current_availability %}selected{% endif %}>All Stock States</option>
+          <option value="in_stock" {% if current_availability == 'in_stock' %}selected{% endif %}>In Stock Only</option>
+          <option value="out_of_stock" {% if current_availability == 'out_of_stock' %}selected{% endif %}>Out of Stock</option>
+        </select>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 0.35rem; padding-bottom: 0.35rem;">
+        <input type="checkbox" id="cat-on-sale" name="on_sale" value="1" {% if on_sale_filter %}checked{% endif %}>
+        <label for="cat-on-sale" style="font-size: var(--dm-text-xs); font-weight: 600;">On Sale Only</label>
+      </div>
+
+      <div style="margin-left: auto;">
+        <label for="cat-sort-select" style="display: block; font-size: var(--dm-text-xs); font-weight: 600; margin-bottom: 0.25rem;">Sort by</label>
+        <select id="cat-sort-select" name="sort" onchange="this.form.submit()" style="padding: 0.4rem 0.75rem; border-radius: var(--dm-radius-sm); border: 1px solid var(--dm-border-strong); background: var(--dm-bg-surface); font-size: var(--dm-text-xs);">
+          {% for sort_val, sort_label in sort_choices %}
+          <option value="{{ sort_val }}" {% if current_sort == sort_val %}selected{% endif %}>{{ sort_label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div style="display: flex; gap: 0.5rem;">
+        <button type="submit" class="dm-btn dm-btn--primary dm-btn--sm">Filter</button>
+        {% if min_price is not None or max_price is not None or current_availability or on_sale_filter or current_fabric %}
+        <a href="{{ category.get_absolute_url }}" class="dm-btn dm-btn--outline dm-btn--sm">Reset</a>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+
   <div class="dm-product-grid">
     {% for product in products %}
       {% include "components/_product_card.html" with product=product %}
     {% empty %}
       <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; background: var(--dm-bg-surface); border-radius: var(--dm-radius-md); border: 1px solid var(--dm-border-subtle);">
-        <p style="font-size: var(--dm-text-lg); font-weight: 600;">No products are currently listed in {{ category.name }}.</p>
+        <p style="font-size: var(--dm-text-lg); font-weight: 600;">No products matched your selection in {{ category.name }}.</p>
         <a href="{% url 'catalog:product_list' %}" class="dm-btn dm-btn--primary dm-btn--sm">Browse All Collections</a>
       </div>
     {% endfor %}
   </div>
+
+  {% include "components/_pagination.html" %}
 </div>
 {% endblock %}

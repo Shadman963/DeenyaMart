@@ -5,10 +5,19 @@ Uses normalized catalog categories and verified sample SKUs from docs/implementa
 from decimal import Decimal
 from django.core.management.base import BaseCommand
 from django.db import transaction
+from django.utils import timezone
 
-from apps.catalog.models import Brand, Category, Product, ProductImage, ProductVariant
+from apps.catalog.models import (
+    Brand,
+    Category,
+    Product,
+    ProductImage,
+    ProductSource,
+    ProductVariant,
+)
 from apps.core.models import ContentPage, SiteSettings
 from apps.shipping.models import ShippingZone
+
 
 
 class Command(BaseCommand):
@@ -457,16 +466,25 @@ class Command(BaseCommand):
             },
         ]
 
-        for pdata in products_spec:
+        now_ts = timezone.now()
+        for idx_prod, pdata in enumerate(products_spec, start=1):
             images = pdata.pop("images")
             variants = pdata.pop("variants")
             sale_price = pdata["base_sale_price"]
             reg_price = pdata["base_regular_price"]
+            selling_price = sale_price if sale_price else reg_price
+            compare_at_price = reg_price if sale_price else None
 
             product, _ = Product.objects.update_or_create(
                 sku_prefix=pdata["sku_prefix"],
                 defaults={
                     **pdata,
+                    "sku": pdata["sku_prefix"],
+                    "currency": "BDT",
+                    "selling_price": selling_price,
+                    "compare_at_price": compare_at_price,
+                    "description": pdata.get("short_description", ""),
+                    "track_inventory": True,
                     "is_active": True,
                     "is_development_fixture": True,
                     "has_variants": len(variants) > 1,
@@ -480,6 +498,7 @@ class Command(BaseCommand):
                     image_url=img_url,
                     alt_text=alt_text,
                     is_primary=is_prim,
+                    display_order=idx,
                     sort_order=idx,
                 )
 
@@ -490,12 +509,34 @@ class Command(BaseCommand):
                         "product": product,
                         "size_label": v_size,
                         "color_label": v_color,
-                        "retail_price": sale_price if sale_price else reg_price,
-                        "compare_at_price": reg_price if sale_price else None,
+                        "retail_price": selling_price,
+                        "compare_at_price": compare_at_price,
                         "stock_qty": v_stock,
+                        "reserved_qty": 0,
                         "is_active": True,
                     },
                 )
+            product.sync_stock_from_variants()
+
+            ProductSource.objects.update_or_create(
+                source_name="droploo",
+                external_id=f"SAMPLE-{1000 + idx_prod}",
+                defaults={
+                    "product": product,
+                    "external_sku": pdata["sku_prefix"],
+                    "external_slug": pdata["slug"],
+                    "source_url": f"https://backend.droploo.com/api/product/details/{pdata['slug']}",
+                    "sync_status": ProductSource.SyncStatus.SYNCED,
+                    "last_synced_at": now_ts,
+                    "is_development_fixture": True,
+                    "raw_data": {
+                        "sample_fixture": True,
+                        "note": "Sample development fixture data clearly marked as non-production.",
+                        "sku": pdata["sku_prefix"],
+                    },
+                },
+            )
+
 
         # 6. Editorial & Policy ContentPages
         pages_spec = [

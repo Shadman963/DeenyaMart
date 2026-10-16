@@ -10,33 +10,107 @@
       <span>/</span>
       <span aria-current="page">Catalog Collections</span>
     </nav>
-    <h1 style="font-size: var(--dm-text-2xl); margin-bottom: 0.35rem;">All Catalog Collections</h1>
+    <h1 style="font-size: var(--dm-text-2xl); margin-bottom: 0.35rem;">
+      {% if selected_category %}{{ selected_category.name }}{% else %}All Catalog Collections{% endif %}
+    </h1>
     <p style="color: var(--dm-text-secondary); font-size: var(--dm-text-sm); margin: 0;">
-      Filter by fabric weave, category, or genuine promotional discounts.
+      Filter by category, fabric weave, price in {{ store_currency_code|default:"BDT" }} ({{ store_currency_symbol|default:"৳" }}), stock availability, or genuine promotional discounts.
     </p>
   </div>
 </div>
 
 <div class="dm-container" style="padding-bottom: 4rem;">
-  <div class="dm-filter-toolbar">
-    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem;">
-      <a href="{% url 'catalog:product_list' %}" class="dm-btn {% if not current_fabric and not on_sale_filter %}dm-btn--primary{% else %}dm-btn--outline{% endif %} dm-btn--sm">All Items</a>
-      {% for b in brands %}
-      <a href="{% url 'catalog:product_list' %}?fabric={{ b.slug }}" class="dm-btn {% if current_fabric == b.slug %}dm-btn--primary{% else %}dm-btn--outline{% endif %} dm-btn--sm">{{ b.name }}</a>
-      {% endfor %}
-      <a href="{% url 'catalog:product_list' %}?on_sale=1" class="dm-btn {% if on_sale_filter %}dm-btn--accent{% else %}dm-btn--outline{% endif %} dm-btn--sm">Value Offers</a>
+  <!-- Category Quick Filter Pills -->
+  {% if categories %}
+  <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.45rem; margin-bottom: 1rem;" aria-label="Filter by category">
+    <span style="font-size: var(--dm-text-xs); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--dm-text-secondary); margin-right: 0.25rem;">Categories:</span>
+    <a href="{% url 'catalog:product_list' %}" class="dm-btn {% if not current_category %}dm-btn--primary{% else %}dm-btn--outline{% endif %} dm-btn--sm">All Categories</a>
+    {% for cat in categories %}
+    <a href="{% url 'catalog:product_list' %}?category={{ cat.slug }}" class="dm-btn {% if current_category == cat.slug %}dm-btn--primary{% else %}dm-btn--outline{% endif %} dm-btn--sm">{{ cat.name }}</a>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- Faceted Filter & Sort Toolbar -->
+  <div class="dm-filter-toolbar" style="flex-direction: column; align-items: stretch; gap: 1rem;">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem;">
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem;">
+        <a href="{% url 'catalog:product_list' %}" class="dm-btn {% if not current_fabric and not on_sale_filter and not in_stock_filter and not current_category %}dm-btn--primary{% else %}dm-btn--outline{% endif %} dm-btn--sm">All Items</a>
+        {% for b in brands %}
+        <a href="{% url 'catalog:product_list' %}?fabric={{ b.slug }}" class="dm-btn {% if current_fabric == b.slug %}dm-btn--primary{% else %}dm-btn--outline{% endif %} dm-btn--sm">{{ b.name }}</a>
+        {% endfor %}
+        <a href="{% url 'catalog:product_list' %}?on_sale=1" class="dm-btn {% if on_sale_filter %}dm-btn--accent{% else %}dm-btn--outline{% endif %} dm-btn--sm">Value Offers</a>
+        <a href="{% url 'catalog:product_list' %}?in_stock=1" class="dm-btn {% if in_stock_filter %}dm-btn--primary{% else %}dm-btn--outline{% endif %} dm-btn--sm">In Stock Only</a>
+      </div>
+
+      <span class="dm-tabular" style="font-size: var(--dm-text-xs); color: var(--dm-text-secondary);">
+        Showing {{ products|length }} of {{ page_obj.paginator.count|default:products|length }} {% if page_obj.paginator.count == 1 %}product{% else %}products{% endif %}
+      </span>
     </div>
 
-    <form method="get" style="display: flex; align-items: center; gap: 0.5rem;">
+    <!-- Price Range, Availability, Search & Sort Form -->
+    <form method="get" action="{% url 'catalog:product_list' %}" style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--dm-border-subtle);">
+      {% if current_category %}<input type="hidden" name="category" value="{{ current_category }}">{% endif %}
       {% if current_fabric %}<input type="hidden" name="fabric" value="{{ current_fabric }}">{% endif %}
-      {% if on_sale_filter %}<input type="hidden" name="on_sale" value="1">{% endif %}
-      <label for="sort-select" style="font-size: var(--dm-text-xs); font-weight: 600;">Sort by:</label>
-      <select id="sort-select" name="sort" onchange="this.form.submit()" style="padding: 0.4rem 0.75rem; border-radius: var(--dm-radius-sm); border: 1px solid var(--dm-border-strong); background: var(--dm-bg-surface); font-size: var(--dm-text-xs);">
-        <option value="featured" {% if current_sort == 'featured' %}selected{% endif %}>Featured Curations</option>
-        <option value="newest" {% if current_sort == 'newest' %}selected{% endif %}>Newest Arrivals</option>
-        <option value="price_asc" {% if current_sort == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
-        <option value="price_desc" {% if current_sort == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
-      </select>
+      {% if search_query %}<input type="hidden" name="q" value="{{ search_query }}">{% endif %}
+
+      <div>
+        <label for="filter-min-price" style="display: block; font-size: var(--dm-text-xs); font-weight: 600; margin-bottom: 0.25rem;">Min Price ({{ store_currency_symbol|default:"৳" }})</label>
+        <input
+          type="number"
+          id="filter-min-price"
+          name="min_price"
+          min="0"
+          step="1"
+          value="{{ min_price|default_if_none:'' }}"
+          placeholder="0"
+          style="width: 110px; padding: 0.4rem 0.6rem; border-radius: var(--dm-radius-sm); border: 1px solid var(--dm-border-strong); background: var(--dm-bg-surface); font-size: var(--dm-text-xs);"
+        >
+      </div>
+
+      <div>
+        <label for="filter-max-price" style="display: block; font-size: var(--dm-text-xs); font-weight: 600; margin-bottom: 0.25rem;">Max Price ({{ store_currency_symbol|default:"৳" }})</label>
+        <input
+          type="number"
+          id="filter-max-price"
+          name="max_price"
+          min="0"
+          step="1"
+          value="{{ max_price|default_if_none:'' }}"
+          placeholder="5000"
+          style="width: 110px; padding: 0.4rem 0.6rem; border-radius: var(--dm-radius-sm); border: 1px solid var(--dm-border-strong); background: var(--dm-bg-surface); font-size: var(--dm-text-xs);"
+        >
+      </div>
+
+      <div>
+        <label for="filter-availability" style="display: block; font-size: var(--dm-text-xs); font-weight: 600; margin-bottom: 0.25rem;">Availability</label>
+        <select id="filter-availability" name="availability" style="padding: 0.4rem 0.65rem; border-radius: var(--dm-radius-sm); border: 1px solid var(--dm-border-strong); background: var(--dm-bg-surface); font-size: var(--dm-text-xs);">
+          <option value="" {% if not current_availability %}selected{% endif %}>All Stock States</option>
+          <option value="in_stock" {% if current_availability == 'in_stock' %}selected{% endif %}>In Stock Only</option>
+          <option value="out_of_stock" {% if current_availability == 'out_of_stock' %}selected{% endif %}>Out of Stock</option>
+        </select>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 0.35rem; padding-bottom: 0.35rem;">
+        <input type="checkbox" id="filter-on-sale" name="on_sale" value="1" {% if on_sale_filter %}checked{% endif %}>
+        <label for="filter-on-sale" style="font-size: var(--dm-text-xs); font-weight: 600;">On Sale Only</label>
+      </div>
+
+      <div style="margin-left: auto;">
+        <label for="sort-select" style="display: block; font-size: var(--dm-text-xs); font-weight: 600; margin-bottom: 0.25rem;">Sort by</label>
+        <select id="sort-select" name="sort" onchange="this.form.submit()" style="padding: 0.4rem 0.75rem; border-radius: var(--dm-radius-sm); border: 1px solid var(--dm-border-strong); background: var(--dm-bg-surface); font-size: var(--dm-text-xs);">
+          {% for sort_val, sort_label in sort_choices %}
+          <option value="{{ sort_val }}" {% if current_sort == sort_val %}selected{% endif %}>{{ sort_label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div style="display: flex; gap: 0.5rem;">
+        <button type="submit" class="dm-btn dm-btn--primary dm-btn--sm">Apply Filters</button>
+        {% if current_category or current_fabric or min_price is not None or max_price is not None or current_availability or on_sale_filter or search_query %}
+        <a href="{% url 'catalog:product_list' %}" class="dm-btn dm-btn--outline dm-btn--sm">Reset</a>
+        {% endif %}
+      </div>
     </form>
   </div>
 
@@ -50,5 +124,7 @@
       </div>
     {% endfor %}
   </div>
+
+  {% include "components/_pagination.html" %}
 </div>
 {% endblock %}

@@ -118,3 +118,10 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_URL = "accounts:login"
 LOGIN_REDIRECT_URL = "accounts:dashboard"
 LOGOUT_REDIRECT_URL = "core:home"
+
+# Explicit Store Currency & Catalog Configuration
+STORE_CURRENCY_CODE = os.environ.get("STORE_CURRENCY_CODE", "BDT")
+STORE_CURRENCY_SYMBOL = os.environ.get("STORE_CURRENCY_SYMBOL", "৳")
+STORE_CURRENCY_DECIMAL_PLACES = 2
+CATALOG_PAGINATE_BY = 12
+

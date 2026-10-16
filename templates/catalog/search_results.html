@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Search Results{% if search_query %} for "{{ search_query }}"{% endif %} — DeenyaMart{% endblock %}
+{% block title %}Search Results{% if search_query %} for "{{ search_query }}"{% endif %} — {{ site_settings.site_name|default:"DeenyaMart" }}{% endblock %}
 
 {% block content %}
 <div class="dm-page-header">
@@ -14,12 +14,78 @@
       {% if search_query %}Search results for "{{ search_query }}"{% else %}Catalog Search{% endif %}
     </h1>
     <p style="color: var(--dm-text-secondary); font-size: var(--dm-text-sm); margin: 0;">
-      Found {{ products|length }} matching {% if products|length == 1 %}item{% else %}items{% endif %}.
+      {% with total_count=page_obj.paginator.count|default:products|length %}
+      Found {{ total_count }} matching {% if total_count == 1 %}item{% else %}items{% endif %}.
+      {% endwith %}
     </p>
   </div>
 </div>
 
 <div class="dm-container" style="padding-bottom: 4rem;">
+  <div class="dm-filter-toolbar">
+    <form method="get" action="{% url 'catalog:search' %}" style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0.75rem; width: 100%;">
+      <div style="flex: 1 1 200px;">
+        <label for="search-page-q" style="display: block; font-size: var(--dm-text-xs); font-weight: 600; margin-bottom: 0.25rem;">Keyword or SKU</label>
+        <input
+          type="search"
+          id="search-page-q"
+          name="q"
+          value="{{ search_query }}"
+          placeholder="Search khimar, hijab, panjabi, or SKU..."
+          style="width: 100%; padding: 0.45rem 0.75rem; border-radius: var(--dm-radius-sm); border: 1px solid var(--dm-border-strong); background: var(--dm-bg-surface); font-size: var(--dm-text-xs);"
+        >
+      </div>
+
+      <div>
+        <label for="search-min-price" style="display: block; font-size: var(--dm-text-xs); font-weight: 600; margin-bottom: 0.25rem;">Min ({{ store_currency_symbol|default:"৳" }})</label>
+        <input
+          type="number"
+          id="search-min-price"
+          name="min_price"
+          min="0"
+          step="1"
+          value="{{ min_price|default_if_none:'' }}"
+          placeholder="0"
+          style="width: 100px; padding: 0.45rem 0.6rem; border-radius: var(--dm-radius-sm); border: 1px solid var(--dm-border-strong); background: var(--dm-bg-surface); font-size: var(--dm-text-xs);"
+        >
+      </div>
+
+      <div>
+        <label for="search-max-price" style="display: block; font-size: var(--dm-text-xs); font-weight: 600; margin-bottom: 0.25rem;">Max ({{ store_currency_symbol|default:"৳" }})</label>
+        <input
+          type="number"
+          id="search-max-price"
+          name="max_price"
+          min="0"
+          step="1"
+          value="{{ max_price|default_if_none:'' }}"
+          placeholder="5000"
+          style="width: 100px; padding: 0.45rem 0.6rem; border-radius: var(--dm-radius-sm); border: 1px solid var(--dm-border-strong); background: var(--dm-bg-surface); font-size: var(--dm-text-xs);"
+        >
+      </div>
+
+      <div>
+        <label for="search-availability" style="display: block; font-size: var(--dm-text-xs); font-weight: 600; margin-bottom: 0.25rem;">Availability</label>
+        <select id="search-availability" name="availability" style="padding: 0.45rem 0.65rem; border-radius: var(--dm-radius-sm); border: 1px solid var(--dm-border-strong); background: var(--dm-bg-surface); font-size: var(--dm-text-xs);">
+          <option value="" {% if not current_availability %}selected{% endif %}>All Stock States</option>
+          <option value="in_stock" {% if current_availability == 'in_stock' %}selected{% endif %}>In Stock Only</option>
+          <option value="out_of_stock" {% if current_availability == 'out_of_stock' %}selected{% endif %}>Out of Stock</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="search-sort" style="display: block; font-size: var(--dm-text-xs); font-weight: 600; margin-bottom: 0.25rem;">Sort by</label>
+        <select id="search-sort" name="sort" onchange="this.form.submit()" style="padding: 0.45rem 0.75rem; border-radius: var(--dm-radius-sm); border: 1px solid var(--dm-border-strong); background: var(--dm-bg-surface); font-size: var(--dm-text-xs);">
+          {% for sort_val, sort_label in sort_choices %}
+          <option value="{{ sort_val }}" {% if current_sort == sort_val %}selected{% endif %}>{{ sort_label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <button type="submit" class="dm-btn dm-btn--primary dm-btn--sm">Refine Search</button>
+    </form>
+  </div>
+
   <div class="dm-product-grid">
     {% for product in products %}
       {% include "components/_product_card.html" with product=product %}
@@ -31,5 +97,7 @@
       </div>
     {% endfor %}
   </div>
+
+  {% include "components/_pagination.html" %}
 </div>
 {% endblock %}

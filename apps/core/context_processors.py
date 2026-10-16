@@ -1,4 +1,5 @@
 """Global storefront context processor."""
+from django.conf import settings
 from django.db.models import Prefetch
 from apps.accounts.models import WishlistItem
 from apps.catalog.models import Category, Product
@@ -7,7 +8,7 @@ from .models import SiteSettings
 
 
 def site_context(request):
-    """Provides site settings, dynamic category hierarchy, shipping facts, and wishlist state."""
+    """Provides site settings, dynamic category hierarchy, shipping facts, currency, and wishlist state."""
     try:
         site_settings = SiteSettings.get_solo()
     except Exception:
@@ -33,11 +34,17 @@ def site_context(request):
 
     has_dev_fixtures = Product.objects.filter(is_active=True, is_development_fixture=True).exists()
 
+    currency_code = getattr(site_settings, "currency_code", None) or getattr(settings, "STORE_CURRENCY_CODE", "BDT")
+    currency_symbol = getattr(site_settings, "currency_symbol", None) or getattr(settings, "STORE_CURRENCY_SYMBOL", "৳")
+
     return {
         "site_settings": site_settings,
+        "store_currency_code": currency_code,
+        "store_currency_symbol": currency_symbol,
         "nav_categories": nav_categories,
         "shipping_zones": shipping_zones,
         "wishlist_product_ids": wishlist_ids,
         "wishlist_count": len(wishlist_ids),
         "has_dev_fixtures": has_dev_fixtures,
     }
+

@@ -1,0 +1,54 @@
+{% if is_paginated and page_obj.paginator.num_pages > 1 %}
+<nav class="dm-pagination" aria-label="Catalog Pagination" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.5rem; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--dm-border-subtle);">
+  {% if page_obj.has_previous %}
+  <a
+    href="?{% if pagination_query_string %}{{ pagination_query_string }}&amp;{% endif %}page={{ page_obj.previous_page_number }}"
+    class="dm-btn dm-btn--outline dm-btn--sm"
+    rel="prev"
+    aria-label="Previous page"
+  >
+    ← Previous
+  </a>
+  {% else %}
+  <span class="dm-btn dm-btn--outline dm-btn--sm" style="opacity: 0.45; pointer-events: none;" aria-disabled="true">← Previous</span>
+  {% endif %}
+
+  <div style="display: flex; align-items: center; gap: 0.35rem;">
+    {% for num in page_obj.paginator.page_range %}
+      {% if num == page_obj.number %}
+      <span
+        class="dm-btn dm-btn--primary dm-btn--sm dm-tabular"
+        aria-current="page"
+      >
+        {{ num }}
+      </span>
+      {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+      <a
+        href="?{% if pagination_query_string %}{{ pagination_query_string }}&amp;{% endif %}page={{ num }}"
+        class="dm-btn dm-btn--outline dm-btn--sm dm-tabular"
+        aria-label="Page {{ num }}"
+      >
+        {{ num }}
+      </a>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  {% if page_obj.has_next %}
+  <a
+    href="?{% if pagination_query_string %}{{ pagination_query_string }}&amp;{% endif %}page={{ page_obj.next_page_number }}"
+    class="dm-btn dm-btn--outline dm-btn--sm"
+    rel="next"
+    aria-label="Next page"
+  >
+    Next →
+  </a>
+  {% else %}
+  <span class="dm-btn dm-btn--outline dm-btn--sm" style="opacity: 0.45; pointer-events: none;" aria-disabled="true">Next →</span>
+  {% endif %}
+
+  <span class="dm-tabular" style="font-size: var(--dm-text-xs); color: var(--dm-text-secondary); margin-left: 0.5rem;">
+    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} ({{ page_obj.paginator.count }} items)
+  </span>
+</nav>
+{% endif %}

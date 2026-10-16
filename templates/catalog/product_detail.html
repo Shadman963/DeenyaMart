@@ -1,11 +1,17 @@
 {% extends "base.html" %}
 
-{% block title %}{{ product.name }} ({{ product.sku_prefix }}) — DeenyaMart{% endblock %}
+{% block title %}{{ product.name }} ({{ product.sku|default:product.sku_prefix }}) — {{ site_settings.site_name|default:"DeenyaMart" }}{% endblock %}
 
 {% block content %}
 <div class="dm-container" style="padding-block: 2.5rem 4rem;">
   <nav class="dm-breadcrumbs" aria-label="Breadcrumb" style="margin-bottom: 1.5rem;">
     <a href="{% url 'core:home' %}">Home</a>
+    <span>/</span>
+    <a href="{% url 'catalog:product_list' %}">Catalog</a>
+    {% if product.category.parent %}
+    <span>/</span>
+    <a href="{{ product.category.parent.get_absolute_url }}">{{ product.category.parent.name }}</a>
+    {% endif %}
     <span>/</span>
     <a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a>
     <span>/</span>
@@ -19,7 +25,7 @@
       <div style="border-radius: var(--dm-radius-lg); overflow: hidden; border: 1px solid var(--dm-border-subtle); background: var(--dm-bg-surface);">
         <img
           id="pdp-main-image"
-          src="{{ primary.image_url|default:'/static/img/fixtures/lf104-primary.svg' }}"
+          src="{{ primary.resolved_url|default:'/static/img/fixtures/lf104-primary.svg' }}"
           alt="{{ primary.alt_text|default:product.name }}"
           width="600"
           height="750"
@@ -28,15 +34,15 @@
       </div>
       {% endwith %}
       {% if gallery_images|length > 1 %}
-      <div style="display: flex; gap: 0.75rem; margin-top: 0.85rem;">
+      <div style="display: flex; gap: 0.75rem; margin-top: 0.85rem; flex-wrap: wrap;">
         {% for img in gallery_images %}
         <button
           type="button"
-          onclick="document.getElementById('pdp-main-image').src='{{ img.image_url }}'"
+          onclick="document.getElementById('pdp-main-image').src='{{ img.resolved_url }}'"
           style="width: 80px; border-radius: var(--dm-radius-sm); overflow: hidden; border: 2px solid var(--dm-border-strong);"
           aria-label="View image {{ forloop.counter }}"
         >
-          <img src="{{ img.image_url }}" alt="{{ img.alt_text }}" width="80" height="100">
+          <img src="{{ img.resolved_url }}" alt="{{ img.alt_text }}" width="80" height="100">
         </button>
         {% endfor %}
       </div>
@@ -45,10 +51,10 @@
 
     <!-- Product Details & Purchase Form -->
     <div style="background: var(--dm-bg-surface); padding: clamp(1.5rem, 3vw, 2.5rem); border-radius: var(--dm-radius-lg); border: 1px solid var(--dm-border-subtle);">
-      <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
-        <span class="dm-pill dm-pill--fabric">{{ product.category.name }}</span>
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+        <a href="{{ product.category.get_absolute_url }}" class="dm-pill dm-pill--fabric">{{ product.category.name }}</a>
         {% if product.brand %}<span class="dm-pill dm-pill--fabric">{{ product.brand.name }}</span>{% endif %}
-        <span style="font-family: var(--dm-font-mono); font-size: var(--dm-text-xs); color: var(--dm-text-muted);">SKU: {{ product.sku_prefix }}</span>
+        <span style="font-family: var(--dm-font-mono); font-size: var(--dm-text-xs); color: var(--dm-text-muted);">SKU: {{ product.sku|default:product.sku_prefix }}</span>
         {% if product.is_development_fixture %}
         <span class="dm-pill dm-pill--fixture">Dev Fixture</span>
         {% endif %}
@@ -57,10 +63,10 @@
       <h1 style="font-size: var(--dm-text-2xl); margin-bottom: 0.75rem;">{{ product.name }}</h1>
 
       <div class="dm-price-group" style="margin-bottom: 1rem;">
-        <ins class="dm-price-current" style="font-size: 1.65rem;">৳{{ product.current_price|floatformat:0 }}</ins>
+        <ins class="dm-price-current" style="font-size: 1.65rem;">{{ store_currency_symbol|default:"৳" }}{{ product.current_price|floatformat:0 }}</ins>
         {% if product.has_valid_discount %}
-        <del class="dm-price-original" style="font-size: 1.05rem;">৳{{ product.original_price|floatformat:0 }}</del>
-        <span class="dm-pill dm-pill--discount">Save ৳{{ product.discount_savings|floatformat:0 }} (−{{ product.discount_percentage }}%)</span>
+        <del class="dm-price-original" style="font-size: 1.05rem;">{{ store_currency_symbol|default:"৳" }}{{ product.original_price|floatformat:0 }}</del>
+        <span class="dm-pill dm-pill--discount">Save {{ store_currency_symbol|default:"৳" }}{{ product.discount_savings|floatformat:0 }} (−{{ product.discount_percentage }}%)</span>
         {% endif %}
       </div>
 
@@ -71,8 +77,14 @@
       </div>
 
       <p style="color: var(--dm-text-secondary); font-size: var(--dm-text-sm); margin-bottom: 1.5rem;">
-        {{ product.short_description }}
+        {{ product.short_description|default:product.description }}
       </p>
+
+      {% if product.description_html %}
+      <div style="color: var(--dm-text-secondary); font-size: var(--dm-text-sm); margin-bottom: 1.5rem;">
+        {{ product.description_html|safe }}
+      </div>
+      {% endif %}
 
       {% if product.fabric_composition %}
       <div style="padding: 0.75rem 1rem; border-radius: var(--dm-radius-sm); background: var(--dm-bg-subtle); font-size: var(--dm-text-xs); margin-bottom: 1.5rem;">
@@ -80,7 +92,7 @@
       </div>
       {% endif %}
 
-      {% if product.is_in_stock %}
+      {% if product.is_in_stock and variants %}
       <form action="{% url 'cart:add' %}" method="post" class="js-add-to-cart-form" style="display: flex; flex-direction: column; gap: 1rem;">
         {% csrf_token %}
         <div>
@@ -89,8 +101,8 @@
           </label>
           <select id="variant-select" name="variant_id" style="width: 100%; padding: 0.75rem; border-radius: var(--dm-radius-sm); border: 1px solid var(--dm-border-strong); background: var(--dm-bg-canvas); font-size: var(--dm-text-sm);">
             {% for v in variants %}
-            <option value="{{ v.id }}" {% if v.stock_qty <= 0 %}disabled{% endif %}>
-              {{ v.display_label }} — ৳{{ v.retail_price|floatformat:0 }} ({{ v.stock_qty }} in stock)
+            <option value="{{ v.id }}" {% if product.track_inventory and v.available_stock <= 0 %}disabled{% endif %}>
+              {{ v.display_label }} — {{ store_currency_symbol|default:"৳" }}{{ v.effective_price|floatformat:0 }} ({% if product.track_inventory %}{{ v.available_stock }} in stock{% else %}In Stock{% endif %})
             </option>
             {% endfor %}
           </select>
@@ -112,5 +124,22 @@
       </div>
     </div>
   </div>
+
+  {% if related_products %}
+  <section class="dm-section" aria-labelledby="related-products-heading" style="padding-bottom: 0;">
+    <div class="dm-section__header">
+      <div>
+        <span class="dm-section__eyebrow">More from {{ product.category.name }}</span>
+        <h2 id="related-products-heading" class="dm-section__title">Related Products</h2>
+      </div>
+      <a href="{{ product.category.get_absolute_url }}" class="dm-btn dm-btn--outline dm-btn--sm">View Category →</a>
+    </div>
+    <div class="dm-product-grid">
+      {% for rel_prod in related_products %}
+        {% include "components/_product_card.html" with product=rel_prod %}
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
 </div>
 {% endblock %}

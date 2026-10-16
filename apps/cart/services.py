@@ -43,12 +43,14 @@ class CartService:
     @classmethod
     def add_item(cls, request, variant_id: int, quantity: int = 1):
         variant = get_object_or_404(
-            ProductVariant.objects.select_related("product"),
+            ProductVariant.objects.select_related("product", "product__category"),
             pk=variant_id,
             is_active=True,
             product__is_active=True,
+            product__category__is_active=True,
         )
-        if variant.stock_qty <= 0:
+        avail = variant.available_stock
+        if variant.product.track_inventory and avail <= 0:
             return None, None, 0, f"{variant.product.name} is currently out of stock."
 
         cart = cls.get_or_create_cart(request, create=True)
@@ -58,13 +60,16 @@ class CartService:
             defaults={"quantity": 0},
         )
         desired_qty = item.quantity + max(1, int(quantity))
-        capped_qty = min(desired_qty, variant.stock_qty)
-        added = capped_qty - item.quantity
+        capped_qty = min(desired_qty, avail) if variant.product.track_inventory else desired_qty
+        added = max(0, capped_qty - item.quantity)
         item.quantity = capped_qty
-        item.save()
+        if item.quantity > 0:
+            item.save()
+        elif created:
+            item.delete()
 
         if added <= 0:
-            msg = f"Maximum available stock ({variant.stock_qty}) for {variant.product.name} is already in your cart."
+            msg = f"Maximum available stock ({avail}) for {variant.product.name} is already in your cart."
         else:
             msg = f"Added {variant.product.name} ({variant.display_label}) to your bag."
         return cart, item, added, msg
@@ -80,15 +85,17 @@ class CartService:
         if not item:
             return cart, "Item not found in your bag."
 
-        if quantity <= 0:
+        if quantity <= 0 or not item.variant.is_in_stock:
             name = item.variant.product.name
             item.delete()
             return cart, f"Removed {name} from your bag."
 
-        capped = min(int(quantity), item.variant.stock_qty)
+        avail = item.variant.available_stock
+        capped = min(int(quantity), avail) if item.variant.product.track_inventory else int(quantity)
         item.quantity = max(1, capped)
         item.save()
         return cart, f"Updated quantity for {item.variant.product.name}."
+
 
     @classmethod
     def get_summary(cls, cart) -> dict:
