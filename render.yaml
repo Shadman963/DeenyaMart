@@ -1,0 +1,46 @@
+services:
+  - type: web
+    name: deenyamart
+    runtime: python
+    plan: free
+    buildCommand: bash build.sh
+    startCommand: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --timeout 120
+    healthCheckPath: /
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.5
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings.production
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_ALLOWED_HOSTS
+        value: ".onrender.com"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: deenyamart-db
+          property: connectionString
+      - key: SERVE_MEDIA
+        value: "True"
+      - key: STORE_CURRENCY_CODE
+        value: BDT
+      - key: STORE_CURRENCY_SYMBOL
+        value: "৳"
+      - key: IMPORT_ALLOW_IMAGE_DOWNLOAD
+        value: "False"
+      - key: DROPLOO_SYNC_ENABLED
+        value: "False"
+      # Set these in the Render dashboard to auto-create an admin account on deploy.
+      - key: DJANGO_SUPERUSER_USERNAME
+        sync: false
+      - key: DJANGO_SUPERUSER_EMAIL
+        sync: false
+      - key: DJANGO_SUPERUSER_PASSWORD
+        sync: false
+
+databases:
+  - name: deenyamart-db
+    plan: free
+    databaseName: deenyamart
+    user: deenyamart
