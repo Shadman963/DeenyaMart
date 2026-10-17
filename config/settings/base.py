@@ -125,3 +125,30 @@ STORE_CURRENCY_SYMBOL = os.environ.get("STORE_CURRENCY_SYMBOL", "৳")
 STORE_CURRENCY_DECIMAL_PLACES = 2
 CATALOG_PAGINATE_BY = 12
 
+# Product Import Pipeline & Authorized Image Downloading Configuration
+IMPORT_DEFAULT_SOURCE_NAME = os.environ.get("IMPORT_DEFAULT_SOURCE_NAME", "droploo")
+IMPORT_ALLOW_IMAGE_DOWNLOAD = os.environ.get("IMPORT_ALLOW_IMAGE_DOWNLOAD", "False").lower() in (
+    "true",
+    "1",
+    "yes",
+)
+IMPORT_ALLOWED_IMAGE_HOSTS = [
+    host.strip().lower()
+    for host in os.environ.get("IMPORT_ALLOWED_IMAGE_HOSTS", "").split(",")
+    if host.strip()
+]
+IMPORT_IMAGE_TIMEOUT_SECONDS = int(os.environ.get("IMPORT_IMAGE_TIMEOUT_SECONDS", "10"))
+IMPORT_MAX_IMAGE_BYTES = int(os.environ.get("IMPORT_MAX_IMAGE_BYTES", str(5 * 1024 * 1024)))  # 5 MB
+
+# Supplier API Credentials (loaded strictly from environment variables; live sync remains disabled
+# until a verified, supplier-authorized integration is configured)
+DROPLOO_API_BASE_URL = os.environ.get("DROPLOO_API_BASE_URL", "")
+DROPLOO_API_KEY = os.environ.get("DROPLOO_API_KEY", "")
+DROPLOO_API_SECRET = os.environ.get("DROPLOO_API_SECRET", "")
+DROPLOO_SYNC_ENABLED = os.environ.get("DROPLOO_SYNC_ENABLED", "False").lower() in (
+    "true",
+    "1",
+    "yes",
+)
+
+

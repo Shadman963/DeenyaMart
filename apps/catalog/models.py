@@ -437,6 +437,8 @@ class Product(TimeStampedModel):
     def __init__(self, *args, **kwargs):
         selling_given = "selling_price" in kwargs or "compare_at_price" in kwargs
         regular_given = "base_regular_price" in kwargs or "base_sale_price" in kwargs
+        if "supplier_cost" in kwargs and "wholesale_cost_price" not in kwargs:
+            kwargs["wholesale_cost_price"] = kwargs.pop("supplier_cost")
         if "stock_quantity" in kwargs and "stock_qty" not in kwargs:
             kwargs["stock_qty"] = kwargs.pop("stock_quantity")
         if "reserved_quantity" in kwargs and "reserved_qty" not in kwargs:
@@ -640,6 +642,46 @@ class Product(TimeStampedModel):
         if not orig or curr >= orig:
             return Decimal("0.00")
         return orig - curr
+
+    @property
+    def supplier_cost(self) -> Decimal | None:
+        """Supplier wholesale cost in store currency (BDT), kept separate from retail selling price."""
+        return self.wholesale_cost_price
+
+    @supplier_cost.setter
+    def supplier_cost(self, value: Decimal | None):
+        self.wholesale_cost_price = value
+
+    @property
+    def margin_amount(self) -> Decimal | None:
+        """Unit retail gross margin (selling_price - supplier_cost) when supplier cost is known."""
+        if self.wholesale_cost_price is None or self.current_price is None:
+            return None
+        return self.current_price - self.wholesale_cost_price
+
+    @property
+    def margin_percentage(self) -> Decimal | None:
+        """Gross margin percentage ((selling_price - supplier_cost) / selling_price * 100)."""
+        if (
+            self.wholesale_cost_price is None
+            or not self.current_price
+            or self.current_price <= Decimal("0.00")
+        ):
+            return None
+        margin_pct = ((self.current_price - self.wholesale_cost_price) / self.current_price) * Decimal("100")
+        return margin_pct.quantize(Decimal("0.01"))
+
+    @property
+    def markup_percentage(self) -> Decimal | None:
+        """Markup percentage over supplier cost ((selling_price - supplier_cost) / supplier_cost * 100)."""
+        if (
+            not self.wholesale_cost_price
+            or self.wholesale_cost_price <= Decimal("0.00")
+            or self.current_price is None
+        ):
+            return None
+        markup_pct = ((self.current_price - self.wholesale_cost_price) / self.wholesale_cost_price) * Decimal("100")
+        return markup_pct.quantize(Decimal("0.01"))
 
     def _prefetched_images(self):
         return list(self.images.all())
@@ -996,6 +1038,8 @@ class ProductVariant(TimeStampedModel):
             kwargs["size_label"] = kwargs.pop("size")
         if "color" in kwargs and "color_label" not in kwargs:
             kwargs["color_label"] = kwargs.pop("color")
+        if "supplier_cost" in kwargs and "wholesale_price" not in kwargs:
+            kwargs["wholesale_price"] = kwargs.pop("supplier_cost")
         if "stock_quantity" in kwargs and "stock_qty" not in kwargs:
             kwargs["stock_qty"] = kwargs.pop("stock_quantity")
         if "reserved_quantity" in kwargs and "reserved_qty" not in kwargs:
@@ -1006,6 +1050,32 @@ class ProductVariant(TimeStampedModel):
         parts = [p for p in (self.size_label, self.color_label, self.option_value) if p]
         label = " / ".join(parts) if parts else "Standard"
         return f"{self.product.name} — {label} ({self.sku})"
+
+    @property
+    def supplier_cost(self) -> Decimal | None:
+        return self.wholesale_price
+
+    @supplier_cost.setter
+    def supplier_cost(self, value: Decimal | None):
+        self.wholesale_price = value
+
+    @property
+    def margin_amount(self) -> Decimal | None:
+        if self.wholesale_price is None or self.effective_price is None:
+            return None
+        return self.effective_price - self.wholesale_price
+
+    @property
+    def margin_percentage(self) -> Decimal | None:
+        if (
+            self.wholesale_price is None
+            or not self.effective_price
+            or self.effective_price <= Decimal("0.00")
+        ):
+            return None
+        return (((self.effective_price - self.wholesale_price) / self.effective_price) * Decimal("100")).quantize(
+            Decimal("0.01")
+        )
 
     @property
     def size(self) -> str:
