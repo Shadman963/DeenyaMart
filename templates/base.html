@@ -5,7 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}{{ site_settings.site_name|default:"DeenyaMart" }} — {{ site_settings.tagline|default:"Thoughtful Modest Wear & Everyday Essentials" }}{% endblock %}</title>
   <meta name="description" content="{% block meta_description %}{{ site_settings.tagline|default:"Curated modest wear, linen khimars, pure cotton panjabis, and household essentials delivered across Bangladesh." }}{% endblock %}">
+  <link rel="icon" type="image/png" href="{% static 'img/deenya-mart-emblem.png' %}">
   <link rel="icon" type="image/svg+xml" href="{% static 'img/favicon.svg' %}">
+
+  <!-- Typography: Quicksand (headings) + Nunito (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Quicksand:wght@500;600;700&display=swap">
 
   <!-- DeenyaMart Design System CSS -->
   <link rel="stylesheet" href="{% static 'css/tokens.css' %}">
@@ -42,6 +48,9 @@
 
   <!-- 11. Complete Storefront Footer -->
   {% include "includes/_footer.html" %}
+
+  <!-- Mobile Sticky Bottom Navigation (≤820px) -->
+  {% include "includes/_bottom_nav.html" %}
 
   <!-- Accessible Mobile Menu Drawer (<dialog>) -->
   {% include "includes/_mobile_drawer.html" %}

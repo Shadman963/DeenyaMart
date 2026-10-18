@@ -1,6 +1,35 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
-  <rect width="64" height="64" rx="14" fill="#0B4F3F"/>
-  <path d="M32 10L38.5 19.5L49.5 16.5L46.5 27.5L56 34L46.5 40.5L49.5 51.5L38.5 48.5L32 58L25.5 48.5L14.5 51.5L17.5 40.5L8 34L17.5 27.5L14.5 16.5L25.5 19.5L32 10Z" stroke="#C88A36" stroke-width="2" fill="#083B2F"/>
-  <path d="M23 42V29C23 24.0294 27.0294 20 32 20C36.9706 20 41 24.0294 41 29V42H23Z" stroke="#FAF7F2" stroke-width="2.5"/>
-  <circle cx="32" cy="29" r="3" fill="#C86D2D"/>
+  <defs>
+    <linearGradient id="dmHandle" x1="20" y1="8" x2="44" y2="24" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0D3D54"/>
+      <stop offset="50%" stop-color="#1CA9B0"/>
+      <stop offset="100%" stop-color="#BA2A67"/>
+    </linearGradient>
+    <linearGradient id="dmBagWave" x1="12" y1="20" x2="52" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F56B3A"/>
+      <stop offset="55%" stop-color="#BA2A67"/>
+      <stop offset="100%" stop-color="#FED23A"/>
+    </linearGradient>
+  </defs>
+  <!-- Bag Handle -->
+  <path d="M23 23V16C23 11.0294 27.0294 7 32 7C36.9706 7 41 11.0294 41 16V23" stroke="url(#dmHandle)" stroke-width="4.2" stroke-linecap="round"/>
+  <!-- Bag Base Silhouette (Deep Petrol) -->
+  <path d="M16.5 20H47.5C49.2 20 50.6 21.3 50.8 23L53.5 53.5C53.7 55.4 52.2 57 50.3 57H13.7C11.8 57 10.3 55.4 10.5 53.5L13.2 23C13.4 21.3 14.8 20 16.5 20Z" fill="#0D3D54"/>
+  <!-- Turquoise Upper Wave -->
+  <path d="M16.5 20H34C33 30 27 38 12.2 42L13.2 23C13.4 21.3 14.8 20 16.5 20Z" fill="#1CA9B0" fill-opacity="0.72"/>
+  <!-- Sunset Orange & Berry Diagonal Swoop -->
+  <path d="M33 20H47.5C49.2 20 50.6 21.3 50.8 23L53.5 53.5C53.7 55.4 52.2 57 50.3 57H13.7L47 21.5L33 20Z" fill="url(#dmBagWave)"/>
+  <!-- Golden Yellow Right Wing & Arc -->
+  <path d="M40 20H57C57 27.5 51.5 33 44 33C39.5 33 36.5 30 36 26L40 20Z" fill="#FED23A"/>
+  <path d="M34 57C35 45 43 38 52.2 38L53.5 53.5C53.7 55.4 52.2 57 50.3 57H34Z" fill="#FED23A"/>
+  <path d="M34 57C35 47.5 41.5 41.5 50 41.5H52.5L53.5 53.5C53.7 55.4 52.2 57 50.3 57H34Z" fill="#1CA9B0"/>
+  <path d="M39.5 57C40.5 49.5 45.5 45 52.8 45L53.5 53.5C53.7 55.4 52.2 57 50.3 57H39.5Z" fill="#F56B3A"/>
+  <!-- Left Semi-Circle Accent -->
+  <path d="M7 38C7 31.5 12.5 26.5 19 26.5C25.5 26.5 30.5 31.5 30.5 38H7Z" fill="#F56B3A" fill-opacity="0.92"/>
+  <path d="M12.7 28.2C14.6 27.1 16.7 26.5 19 26.5C24.2 26.5 28.6 29.8 30 34.5C24 36.5 17 34.5 12.7 28.2Z" fill="#BA2A67"/>
+  <!-- Handle Grommets -->
+  <circle cx="23" cy="23.5" r="2.8" fill="#FFFFFF"/>
+  <circle cx="23" cy="23.5" r="1.5" fill="#0D3D54"/>
+  <circle cx="41" cy="23.5" r="2.8" fill="#FFFFFF"/>
+  <circle cx="41" cy="23.5" r="1.5" fill="#BA2A67"/>
 </svg>

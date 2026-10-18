@@ -1,30 +1,42 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1050" fill="none">
   <defs>
     <linearGradient id="bgGrad" x1="0" y1="0" x2="900" y2="1050" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#F3EDE0"/>
-      <stop offset="55%" stop-color="#E8DFCE"/>
-      <stop offset="100%" stop-color="#DDD1BC"/>
+      <stop offset="0%" stop-color="#FFF9F3"/>
+      <stop offset="50%" stop-color="#F6F2EB"/>
+      <stop offset="100%" stop-color="#EBF4F6"/>
     </linearGradient>
     <linearGradient id="archGrad" x1="180" y1="120" x2="720" y2="950" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#0B4F3F"/>
-      <stop offset="100%" stop-color="#07352A"/>
+      <stop offset="0%" stop-color="#0D3D54"/>
+      <stop offset="55%" stop-color="#0A2E40"/>
+      <stop offset="100%" stop-color="#072230"/>
     </linearGradient>
-    <linearGradient id="terracottaGrad" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#D47A3B"/>
-      <stop offset="100%" stop-color="#B35920"/>
+    <linearGradient id="sunsetWave" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F56B3A"/>
+      <stop offset="55%" stop-color="#BA2A67"/>
+      <stop offset="100%" stop-color="#9A1F53"/>
+    </linearGradient>
+    <linearGradient id="tealArc" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1CA9B0"/>
+      <stop offset="100%" stop-color="#0D3D54"/>
     </linearGradient>
     <pattern id="linenWeave" width="16" height="16" patternUnits="userSpaceOnUse">
-      <path d="M0 8H16M8 0V16" stroke="#14231E" stroke-opacity="0.035" stroke-width="1"/>
+      <path d="M0 8H16M8 0V16" stroke="#0D3D54" stroke-opacity="0.035" stroke-width="1"/>
     </pattern>
   </defs>
   <rect width="900" height="1050" fill="url(#bgGrad)"/>
   <rect width="900" height="1050" fill="url(#linenWeave)"/>
-  <!-- Architectural Arch Backdrop -->
+  <!-- Logo-Inspired Ambient Geometric Semi-Circles -->
+  <circle cx="740" cy="210" r="155" fill="#FED23A" fill-opacity="0.28"/>
+  <circle cx="150" cy="310" r="120" fill="#1CA9B0" fill-opacity="0.16"/>
+  <!-- Architectural Arch Backdrop (Deep Petrol from Logo) -->
   <path d="M165 960V410C165 252.6 292.6 125 450 125C607.4 125 735 252.6 735 410V960H165Z" fill="url(#archGrad)"/>
-  <path d="M190 960V415C190 271.4 306.4 155 450 155C593.6 155 710 271.4 710 415V960" stroke="#C88A36" stroke-opacity="0.45" stroke-width="2"/>
-  <!-- Ambient Warm Sun Disc -->
-  <circle cx="570" cy="310" r="96" fill="#C86D2D" fill-opacity="0.88"/>
-  <circle cx="570" cy="310" r="118" stroke="#C88A36" stroke-opacity="0.35" stroke-width="1.5" stroke-dasharray="4 6"/>
+  <!-- Turquoise & Gold Geometric Wave Inside Arch (Echoing Logo Bag) -->
+  <path d="M165 560C295 540 410 420 450 125C300 125 165 252.6 165 410V560Z" fill="url(#tealArc)" fill-opacity="0.45"/>
+  <path d="M190 960V415C190 271.4 306.4 155 450 155C593.6 155 710 271.4 710 415V960" stroke="#FED23A" stroke-opacity="0.45" stroke-width="2"/>
+  <!-- Ambient Warm Marigold-Sunset Disc -->
+  <circle cx="575" cy="305" r="96" fill="#FED23A" fill-opacity="0.92"/>
+  <path d="M479 305C479 252 522 209 575 209C628 209 671 252 671 305H479Z" fill="#F56B3A" fill-opacity="0.88"/>
+  <circle cx="575" cy="305" r="118" stroke="#FED23A" stroke-opacity="0.45" stroke-width="1.5" stroke-dasharray="4 6"/>
   <!-- Editorial Draped Modest Silhouette (Left Figure - Linen Khimar) -->
   <path d="M250 960L285 470C292 385 345 330 415 330C485 330 538 385 548 470L590 960H250Z" fill="#FAF7F2"/>
   <path d="M285 470C315 520 375 550 455 540C510 532 540 500 548 470" stroke="#D8CEBE" stroke-width="3" fill="none"/>
@@ -33,18 +45,22 @@
   <path d="M355 530L330 960" stroke="#DED5C5" stroke-width="2.5"/>
   <path d="M415 545L410 960" stroke="#DED5C5" stroke-width="2.5"/>
   <path d="M475 535L505 960" stroke="#DED5C5" stroke-width="2.5"/>
-  <!-- Secondary Terracotta Layered Shawl Accent -->
-  <path d="M450 435C525 435 585 495 605 595L665 960H495L465 570C460 510 445 465 450 435Z" fill="url(#terracottaGrad)"/>
-  <path d="M525 540L575 960" stroke="#FAF7F2" stroke-opacity="0.25" stroke-width="2"/>
-  <!-- Botanical Olive & Cypress Sprig -->
-  <g stroke="#C88A36" stroke-width="2" fill="none" opacity="0.85">
+  <!-- Secondary Sunset Coral & Berry Layered Shawl Accent (Matching Logo "Mart") -->
+  <path d="M450 435C525 435 585 495 605 595L665 960H495L465 570C460 510 445 465 450 435Z" fill="url(#sunsetWave)"/>
+  <path d="M525 540L575 960" stroke="#FAF7F2" stroke-opacity="0.28" stroke-width="2"/>
+  <!-- Logo-Inspired Flowing Ribbon Curve on Right -->
+  <path d="M540 960C555 810 645 730 765 695" stroke="#FED23A" stroke-width="14" stroke-linecap="round" stroke-opacity="0.85"/>
+  <path d="M575 960C590 835 670 765 785 735" stroke="#1CA9B0" stroke-width="10" stroke-linecap="round" stroke-opacity="0.85"/>
+  <!-- Botanical Sprig -->
+  <g stroke="#FED23A" stroke-width="2" fill="none" opacity="0.9">
     <path d="M195 790C235 720 265 640 275 540"/>
-    <ellipse cx="225" cy="705" rx="18" ry="8" transform="rotate(-30 225 705)" fill="#C88A36" fill-opacity="0.25"/>
-    <ellipse cx="255" cy="645" rx="18" ry="8" transform="rotate(-20 255 645)" fill="#C88A36" fill-opacity="0.25"/>
-    <ellipse cx="235" cy="605" rx="16" ry="7" transform="rotate(25 235 605)" fill="#C88A36" fill-opacity="0.25"/>
+    <ellipse cx="225" cy="705" rx="18" ry="8" transform="rotate(-30 225 705)" fill="#1CA9B0" fill-opacity="0.45"/>
+    <ellipse cx="255" cy="645" rx="18" ry="8" transform="rotate(-20 255 645)" fill="#FED23A" fill-opacity="0.35"/>
+    <ellipse cx="235" cy="605" rx="16" ry="7" transform="rotate(25 235 605)" fill="#F56B3A" fill-opacity="0.35"/>
   </g>
   <!-- Editorial Caption Stamp inside Illustration -->
-  <rect x="64" y="64" width="250" height="44" rx="22" fill="#FAF7F2" fill-opacity="0.92" stroke="#E2DDD2"/>
-  <circle cx="88" cy="86" r="5" fill="#0B4F3F"/>
-  <text x="104" y="91" fill="#14231E" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="600" letter-spacing="0.08em">DEENYAMART ATELIER</text>
+  <rect x="64" y="64" width="262" height="44" rx="22" fill="#FFFFFF" fill-opacity="0.95" stroke="#D9E6EC"/>
+  <circle cx="88" cy="86" r="5" fill="#F56B3A"/>
+  <circle cx="102" cy="86" r="5" fill="#BA2A67"/>
+  <text x="118" y="91" fill="#0D3D54" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" letter-spacing="0.08em">DEENYAMART ATELIER</text>
 </svg>

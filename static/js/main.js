@@ -133,6 +133,17 @@
     }
   });
 
+  /* Mobile Bottom-Nav "Search" — focus header search input (falls back to search page link) */
+  document.addEventListener("click", (event) => {
+    const focusTrigger = event.target.closest("[data-focus-search]");
+    if (!focusTrigger) return;
+    const input = document.getElementById("dm-search-input");
+    if (!input) return;
+    event.preventDefault();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    input.focus({ preventScroll: true });
+  });
+
   /* Wishlist Async Toggle */
   document.addEventListener("submit", async (event) => {
     const wishlistForm = event.target.closest(".js-wishlist-form");
@@ -197,6 +208,258 @@
       } finally {
         if (submitBtn) submitBtn.disabled = false;
       }
+    }
+  });
+
+  /* Homepage Hero Carousel Controller (progressive enhancement) */
+  document.querySelectorAll("[data-hero-carousel]").forEach((carousel) => {
+    const slides = Array.from(carousel.querySelectorAll("[data-hero-slide]"));
+    const dots = Array.from(carousel.querySelectorAll("[data-hero-dot]"));
+    const prevBtn = carousel.querySelector("[data-hero-prev]");
+    const nextBtn = carousel.querySelector("[data-hero-next]");
+    if (slides.length < 2) return;
+
+    let currentIndex = 0;
+    let timerId = null;
+    const prefersReducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function goToSlide(index) {
+      currentIndex = (index + slides.length) % slides.length;
+      slides.forEach((slide, idx) => {
+        const active = idx === currentIndex;
+        slide.classList.toggle("is-active", active);
+        slide.hidden = !active;
+      });
+      dots.forEach((dot, idx) => {
+        const active = idx === currentIndex;
+        dot.classList.toggle("is-active", active);
+        dot.setAttribute("aria-selected", String(active));
+      });
+    }
+
+    function startAuto() {
+      if (prefersReducedMotion) return;
+      stopAuto();
+      timerId = window.setInterval(() => {
+        goToSlide(currentIndex + 1);
+      }, 6500);
+    }
+
+    function stopAuto() {
+      if (timerId) {
+        window.clearInterval(timerId);
+        timerId = null;
+      }
+    }
+
+    if (prevBtn) {
+      prevBtn.addEventListener("click", () => {
+        goToSlide(currentIndex - 1);
+        startAuto();
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener("click", () => {
+        goToSlide(currentIndex + 1);
+        startAuto();
+      });
+    }
+
+    dots.forEach((dot, idx) => {
+      dot.addEventListener("click", () => {
+        goToSlide(idx);
+        startAuto();
+      });
+    });
+
+    carousel.addEventListener("mouseenter", stopAuto);
+    carousel.addEventListener("mouseleave", startAuto);
+    carousel.addEventListener("focusin", stopAuto);
+    carousel.addEventListener("focusout", startAuto);
+    startAuto();
+  });
+
+  /* Homepage Featured Collections Tab Switcher ("New In", "Trending Now", "Best Sellers") */
+  document.querySelectorAll("[data-collection-tabs]").forEach((section) => {
+    const tabs = Array.from(section.querySelectorAll("[data-collection-tab]"));
+    const panels = Array.from(section.querySelectorAll("[data-collection-panel]"));
+    if (tabs.length === 0 || panels.length === 0) return;
+
+    function activateTab(targetKey) {
+      tabs.forEach((tab) => {
+        const active = tab.getAttribute("data-collection-tab") === targetKey;
+        tab.classList.toggle("is-active", active);
+        tab.setAttribute("aria-selected", String(active));
+      });
+      panels.forEach((panel) => {
+        const active = panel.getAttribute("data-collection-panel") === targetKey;
+        panel.classList.toggle("is-active", active);
+        panel.hidden = !active;
+      });
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        activateTab(tab.getAttribute("data-collection-tab"));
+      });
+    });
+  });
+
+  /* Product Detail Page (PDP) Controller: Gallery Thumbs, Variant Swatches/Pills & Quantity Stepper */
+  document.querySelectorAll("[data-pdp-root]").forEach((pdpRoot) => {
+    const mainImg = document.getElementById("pdp-main-image");
+    const lightboxImg = document.getElementById("pdp-lightbox-image");
+    const thumbs = Array.from(pdpRoot.querySelectorAll("[data-pdp-thumb]"));
+
+    thumbs.forEach((thumb) => {
+      thumb.addEventListener("click", () => {
+        const src = thumb.getAttribute("data-img-src");
+        const alt = thumb.getAttribute("data-img-alt");
+        if (mainImg && src) {
+          mainImg.src = src;
+          if (alt) mainImg.alt = alt;
+        }
+        if (lightboxImg && src) {
+          lightboxImg.src = src;
+          if (alt) lightboxImg.alt = alt;
+        }
+        thumbs.forEach((t) => {
+          const active = t === thumb;
+          t.classList.toggle("is-active", active);
+          t.setAttribute("aria-selected", String(active));
+        });
+      });
+    });
+
+    const variantSelect = pdpRoot.querySelector("[data-pdp-variant-select]");
+    const variantPills = Array.from(pdpRoot.querySelectorAll("[data-pdp-variant-pill]"));
+    const colorBtns = Array.from(pdpRoot.querySelectorAll("[data-pdp-color-btn]"));
+    const selectedColorEl = pdpRoot.querySelector("[data-pdp-selected-color]");
+    const selectedSizeEl = pdpRoot.querySelector("[data-pdp-selected-size]");
+    const skuEl = pdpRoot.querySelector("[data-pdp-sku]");
+    const priceEl = pdpRoot.querySelector("[data-pdp-price]");
+    const qtyInput = pdpRoot.querySelector("[data-qty-input]");
+    const qtyDec = pdpRoot.querySelector("[data-qty-dec]");
+    const qtyInc = pdpRoot.querySelector("[data-qty-inc]");
+
+    function clampQuantity() {
+      if (!qtyInput) return;
+      const min = parseInt(qtyInput.getAttribute("min") || "1", 10) || 1;
+      const max = parseInt(qtyInput.getAttribute("max") || "99", 10) || 99;
+      let val = parseInt(qtyInput.value || "1", 10);
+      if (Number.isNaN(val) || val < min) val = min;
+      if (val > max) val = max;
+      qtyInput.value = String(val);
+    }
+
+    function syncVariantState(variantId) {
+      if (variantSelect && String(variantSelect.value) !== String(variantId)) {
+        variantSelect.value = String(variantId);
+      }
+
+      let activePill = null;
+      variantPills.forEach((pill) => {
+        const isMatch = pill.getAttribute("data-pdp-variant-pill") === String(variantId);
+        pill.classList.toggle("is-active", isMatch);
+        pill.classList.toggle("is-selected", isMatch);
+        pill.setAttribute("aria-checked", String(isMatch));
+        if (isMatch) activePill = pill;
+      });
+
+      if (!activePill) return;
+
+      const color = activePill.getAttribute("data-variant-color") || "";
+      const size = activePill.getAttribute("data-variant-size") || "";
+      const sku = activePill.getAttribute("data-variant-sku") || "";
+      const price = activePill.getAttribute("data-variant-price") || "";
+      const stock = parseInt(activePill.getAttribute("data-variant-stock") || "99", 10) || 99;
+
+      if (selectedColorEl && color) selectedColorEl.textContent = color;
+      if (selectedSizeEl && size) selectedSizeEl.textContent = size;
+      if (skuEl && sku) skuEl.textContent = `SKU: ${sku}`;
+      if (priceEl && price) {
+        const symbol = priceEl.getAttribute("data-currency") || "৳";
+        priceEl.textContent = `${symbol}${price}`;
+      }
+
+      colorBtns.forEach((btn) => {
+        const isMatch = btn.getAttribute("data-pdp-color-btn") === color;
+        btn.classList.toggle("is-selected", isMatch);
+        btn.setAttribute("aria-checked", String(isMatch));
+      });
+
+      if (qtyInput && stock > 0) {
+        qtyInput.setAttribute("max", String(stock));
+        clampQuantity();
+      }
+    }
+
+    variantPills.forEach((pill) => {
+      pill.addEventListener("click", () => {
+        if (pill.disabled) return;
+        syncVariantState(pill.getAttribute("data-pdp-variant-pill"));
+      });
+    });
+
+    colorBtns.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const targetColor = btn.getAttribute("data-pdp-color-btn");
+        const matchingPill = variantPills.find(
+          (p) => !p.disabled && p.getAttribute("data-variant-color") === targetColor
+        );
+        if (matchingPill) {
+          syncVariantState(matchingPill.getAttribute("data-pdp-variant-pill"));
+        }
+      });
+    });
+
+    if (variantSelect) {
+      variantSelect.addEventListener("change", () => {
+        syncVariantState(variantSelect.value);
+      });
+    }
+
+    if (qtyDec && qtyInput) {
+      qtyDec.addEventListener("click", () => {
+        qtyInput.value = String((parseInt(qtyInput.value || "1", 10) || 1) - 1);
+        clampQuantity();
+      });
+    }
+
+    if (qtyInc && qtyInput) {
+      qtyInc.addEventListener("click", () => {
+        qtyInput.value = String((parseInt(qtyInput.value || "1", 10) || 1) + 1);
+        clampQuantity();
+      });
+    }
+
+    if (qtyInput) {
+      qtyInput.addEventListener("change", clampQuantity);
+    }
+
+    /* --- 9. Cart Drawer Free Shipping Progress Bar Sync --- */
+    function syncCartShippingProgress() {
+      const bar = document.querySelector("[data-shipping-progress]");
+      if (!bar) return;
+      const subtotal = parseFloat(bar.getAttribute("data-subtotal") || "0") || 0;
+      const threshold = parseFloat(bar.getAttribute("data-threshold") || "2500") || 2500;
+      const currency = bar.getAttribute("data-currency") || "৳";
+      const remainingEl = bar.querySelector("[data-shipping-remaining]");
+      if (remainingEl && subtotal < threshold) {
+        const remaining = Math.max(0, Math.round(threshold - subtotal));
+        remainingEl.textContent = `${currency}${remaining}`;
+      }
+    }
+
+    syncCartShippingProgress();
+
+    const cartDrawerBody = document.getElementById("dm-cart-drawer-body");
+    if (cartDrawerBody && typeof MutationObserver !== "undefined") {
+      const observer = new MutationObserver(() => {
+        syncCartShippingProgress();
+      });
+      observer.observe(cartDrawerBody, { childList: true });
     }
   });
 })();

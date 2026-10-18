@@ -1,9 +1,20 @@
-<dialog id="dm-mobile-drawer" class="dm-drawer" aria-labelledby="dm-mobile-drawer-title">
+{% load static %}<dialog id="dm-mobile-drawer" class="dm-drawer" aria-labelledby="dm-mobile-drawer-title">
   <div class="dm-drawer__layout">
     <div class="dm-drawer__header">
-      <h2 id="dm-mobile-drawer-title" class="dm-drawer__title">Browse DeenyaMart</h2>
+      <div class="dm-drawer__brand">
+        <img
+          src="{% static 'img/deenya-mart-logo.png' %}"
+          alt="DeenyaMart"
+          width="468"
+          height="380"
+          loading="lazy"
+          decoding="async"
+          class="dm-drawer__logo"
+        >
+        <h2 id="dm-mobile-drawer-title" class="dm-drawer__title">Browse Store</h2>
+      </div>
       <button type="button" class="dm-drawer__close" data-close-dialog aria-label="Close navigation menu">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
           <line x1="18" y1="6" x2="6" y2="18"></line>
           <line x1="6" y1="6" x2="18" y2="18"></line>
         </svg>
@@ -11,71 +22,84 @@
     </div>
 
     <div class="dm-drawer__body">
+      <!-- Quick Pills: Home / New / Sale -->
+      <div class="dm-mnav__quick">
+        <a href="{% url 'core:home' %}" class="dm-mnav__chip">Home</a>
+        <a href="{% url 'catalog:product_list' %}?sort=newest" class="dm-mnav__chip dm-mnav__chip--sky">✨ New Arrivals</a>
+        <a href="{% url 'catalog:product_list' %}?on_sale=1" class="dm-mnav__chip dm-mnav__chip--pink">Sale</a>
+      </div>
+
+      <!-- Shop by Category -->
       <nav aria-label="Mobile Category Navigation">
-        <ul style="display: flex; flex-direction: column; gap: 0.25rem;">
-          <li>
-            <a href="{% url 'core:home' %}" style="display: block; padding: 0.7rem 0.5rem; font-weight: 600; border-bottom: 1px solid var(--dm-border-subtle);">Home</a>
-          </li>
-          <li>
-            <a href="{% url 'catalog:product_list' %}" style="display: block; padding: 0.7rem 0.5rem; font-weight: 600; color: var(--dm-brand-primary); border-bottom: 1px solid var(--dm-border-subtle);">All Catalog Collections</a>
+        <p class="dm-mnav__heading">Shop by Category</p>
+        <ul class="dm-mnav__list">
+          <li class="dm-mnav__item">
+            <div class="dm-mnav__row">
+              <a href="{% url 'catalog:product_list' %}" class="dm-mnav__link dm-mnav__link--all">All Catalog Collections</a>
+            </div>
           </li>
           {% for category in nav_categories %}
-          <li style="border-bottom: 1px solid var(--dm-border-subtle);">
-            <div style="display: flex; align-items: center; justify-content: space-between;">
-              <a href="{{ category.get_absolute_url }}" style="flex: 1; padding: 0.75rem 0.5rem; font-weight: 600;">
-                {{ category.name }}
+          <li class="dm-mnav__item">
+            <div class="dm-mnav__row">
+              <a href="{{ category.get_absolute_url }}" class="dm-mnav__link">
+                <span class="dm-nav__dot" aria-hidden="true"></span>
+                <span>{{ category.name }}</span>
               </a>
               {% if category.active_children %}
               <button
                 type="button"
+                class="dm-mnav__toggle"
                 data-mobile-sub-toggle
                 aria-expanded="false"
                 aria-controls="mobile-sub-{{ category.id }}"
                 aria-label="Toggle {{ category.name }} subcategories"
-                style="padding: 0.65rem; color: var(--dm-text-secondary);"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true">
                   <polyline points="6 9 12 15 18 9"></polyline>
                 </svg>
               </button>
               {% endif %}
             </div>
             {% if category.active_children %}
-            <ul id="mobile-sub-{{ category.id }}" hidden style="padding: 0.25rem 0 0.65rem 1.25rem; display: flex; flex-direction: column; gap: 0.35rem;">
+            <ul id="mobile-sub-{{ category.id }}" class="dm-mnav__sublist" hidden>
               {% for sub in category.active_children %}
               <li>
-                <a href="{{ sub.get_absolute_url }}" style="display: block; padding: 0.35rem 0; font-size: var(--dm-text-sm); color: var(--dm-text-secondary);">
-                  {{ sub.name }}
-                </a>
+                <a href="{{ sub.get_absolute_url }}" class="dm-mnav__sublink">{{ sub.name }}</a>
               </li>
               {% endfor %}
             </ul>
             {% endif %}
           </li>
           {% endfor %}
-          <li>
-            <a href="{% url 'catalog:product_list' %}?sort=newest" style="display: block; padding: 0.7rem 0.5rem; font-weight: 600; border-bottom: 1px solid var(--dm-border-subtle);">New Arrivals</a>
-          </li>
-          <li>
-            <a href="{% url 'catalog:product_list' %}?on_sale=1" style="display: block; padding: 0.7rem 0.5rem; font-weight: 600; color: var(--dm-brand-accent); border-bottom: 1px solid var(--dm-border-subtle);">Value Offers</a>
-          </li>
         </ul>
       </nav>
 
-      <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--dm-border-strong); display: flex; flex-direction: column; gap: 0.65rem; font-size: var(--dm-text-sm);">
-        <a href="{% url 'orders:track' %}" style="display: flex; align-items: center; gap: 0.5rem; font-weight: 600;">
-          <span>Track Your Order</span>
-        </a>
-        <a href="{% url 'accounts:wishlist' %}" style="display: flex; align-items: center; justify-content: space-between; font-weight: 600;">
-          <span>Saved Wishlist</span>
-          <span class="dm-badge-count" data-wishlist-count>{{ wishlist_count|default:0 }}</span>
-        </a>
-        <a href="{% url 'accounts:dashboard' %}" style="display: flex; align-items: center; gap: 0.5rem; font-weight: 600;">
-          <span>Customer Account</span>
-        </a>
-        <a href="{% url 'core:contact' %}" style="display: flex; align-items: center; gap: 0.5rem; color: var(--dm-text-secondary);">
-          <span>Customer Care ({{ site_settings.support_phone|default:"+880 1700-000000" }})</span>
-        </a>
+      <!-- My Account & Help -->
+      <div class="dm-mnav__section">
+        <p class="dm-mnav__heading">My Account &amp; Help</p>
+        <ul class="dm-mnav__utility">
+          <li>
+            <a href="{% url 'accounts:dashboard' %}" class="dm-mnav__utility-link">
+              <span>Customer Account</span>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'accounts:wishlist' %}" class="dm-mnav__utility-link">
+              <span>Saved Wishlist</span>
+              <span class="dm-badge-count dm-badge-count--pink dm-badge-count--inline" data-wishlist-count>{{ wishlist_count|default:0 }}</span>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'orders:track' %}" class="dm-mnav__utility-link">
+              <span>Track Your Order</span>
+            </a>
+          </li>
+          <li>
+            <a href="{% url 'core:contact' %}" class="dm-mnav__utility-link dm-mnav__utility-link--muted">
+              <span>Customer Care ({{ site_settings.support_phone|default:"+880 1700-000000" }})</span>
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
   </div>

@@ -1,0 +1,77 @@
+{% with view_name=request.resolver_match.view_name %}
+<nav class="dm-bottom-nav" aria-label="Mobile quick navigation">
+  <ul class="dm-bottom-nav__list">
+    <li>
+      <a href="{% url 'core:home' %}" class="dm-bottom-nav__item{% if view_name == 'core:home' %} is-active{% endif %}"{% if view_name == 'core:home' %} aria-current="page"{% endif %}>
+        <span class="dm-bottom-nav__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"></path>
+          </svg>
+        </span>
+        <span class="dm-bottom-nav__label">Home</span>
+      </a>
+    </li>
+    <li>
+      <button
+        type="button"
+        class="dm-bottom-nav__item"
+        data-open-dialog="dm-mobile-drawer"
+        aria-controls="dm-mobile-drawer"
+        aria-expanded="false"
+      >
+        <span class="dm-bottom-nav__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <rect x="3" y="3" width="7" height="7" rx="2"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="2"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="2"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="2"></rect>
+          </svg>
+        </span>
+        <span class="dm-bottom-nav__label">Categories</span>
+      </button>
+    </li>
+    <li>
+      <a href="{% url 'catalog:search' %}" class="dm-bottom-nav__item{% if view_name == 'catalog:search' %} is-active{% endif %}" data-focus-search>
+        <span class="dm-bottom-nav__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7.5"></circle>
+            <line x1="20.5" y1="20.5" x2="16.4" y2="16.4"></line>
+          </svg>
+        </span>
+        <span class="dm-bottom-nav__label">Search</span>
+      </a>
+    </li>
+    <li>
+      <button
+        type="button"
+        class="dm-bottom-nav__item"
+        data-open-dialog="dm-cart-drawer"
+        aria-controls="dm-cart-drawer"
+        aria-expanded="false"
+        aria-label="Open shopping bag ({{ cart_count|default:0 }} items)"
+      >
+        <span class="dm-bottom-nav__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          <span class="dm-badge-count dm-tabular" data-cart-count>{{ cart_count|default:0 }}</span>
+        </span>
+        <span class="dm-bottom-nav__label">Cart</span>
+      </button>
+    </li>
+    <li>
+      <a href="{% url 'accounts:dashboard' %}" class="dm-bottom-nav__item{% if view_name == 'accounts:dashboard' %} is-active{% endif %}"{% if view_name == 'accounts:dashboard' %} aria-current="page"{% endif %}>
+        <span class="dm-bottom-nav__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </span>
+        <span class="dm-bottom-nav__label">Account</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+{% endwith %}

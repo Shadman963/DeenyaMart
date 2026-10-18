@@ -1,6 +1,17 @@
 {% if not site_settings or site_settings.announcement_enabled %}
 <aside class="dm-topbar" aria-label="Storefront Promotion and Delivery Notice">
   <div class="dm-container dm-topbar__inner">
+    <!-- Left (desktop): Quick utility links -->
+    <div class="dm-topbar__utilities dm-topbar__utilities--start">
+      <a href="{% url 'orders:track' %}" class="dm-topbar__link">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        <span>Track Order</span>
+      </a>
+    </div>
+
+    <!-- Center: Announcement Message -->
     <div class="dm-topbar__promo">
       {% if site_settings.announcement_badge %}
       <span class="dm-topbar__badge">{{ site_settings.announcement_badge }}</span>
@@ -10,17 +21,10 @@
       <span class="dm-topbar__text">
         {{ site_settings.announcement_text|default:"Cash on Delivery across Bangladesh · Inside Dhaka ৳60 (1–2 Days) · Outside Dhaka ৳120" }}
       </span>
-      {% if site_settings.announcement_cta_text and site_settings.announcement_cta_url %}
-      <a href="{{ site_settings.announcement_cta_url }}" class="dm-topbar__cta">{{ site_settings.announcement_cta_text }} →</a>
-      {% endif %}
     </div>
-    <div class="dm-topbar__utilities">
-      <a href="{% url 'orders:track' %}" class="dm-topbar__link">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-        </svg>
-        <span>Track Order</span>
-      </a>
+
+    <!-- Right (desktop): Delivery & Care -->
+    <div class="dm-topbar__utilities dm-topbar__utilities--end">
       <a href="{% url 'core:page_detail' slug='shipping-policy' %}" class="dm-topbar__link">
         <span>Delivery Rates</span>
       </a>

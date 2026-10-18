@@ -30,9 +30,8 @@ class StorefrontHomepageTests(TestCase):
         self.assertContains(response, "Women")
         self.assertContains(response, "Men")
         self.assertContains(response, "Kids")
-        # 4. Hero section
-        self.assertContains(response, "Refined Modest Wear")
-        self.assertContains(response, "Shop Now")
+        # 5. Category Showcase
+        self.assertContains(response, "Explore by Category")
         # 6. New Arrivals
         self.assertContains(response, "New Arrivals")
         # 7. Promotional Collection Banner

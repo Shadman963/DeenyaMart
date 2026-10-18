@@ -1,38 +1,71 @@
-<footer class="dm-footer" aria-label="Site Footer">
+{% load static %}<footer class="dm-footer" aria-label="Site Footer">
   <div class="dm-container">
+    <!-- Top Footer Newsletter Signup Strip -->
+    <div class="dm-footer__newsletter">
+      <div class="dm-footer__newsletter-copy">
+        <span class="dm-footer__newsletter-badge">✨ Join the Family Club</span>
+        <h2 class="dm-footer__newsletter-title">Get New Arrival Alerts &amp; Seasonal Offers</h2>
+        <p class="dm-footer__newsletter-sub">
+          Be the first to know when fresh Kids' modest sets, Linen Khimars, and pure cotton Panjabis land in store.
+        </p>
+      </div>
+
+      <form action="{% url 'core:newsletter_subscribe' %}" method="post" class="js-newsletter-form dm-footer__newsletter-form" novalidate>
+        {% csrf_token %}
+        <label for="footer-newsletter-email" class="sr-only">Email address for newsletter</label>
+        <div class="dm-footer__newsletter-bar">
+          <input
+            type="email"
+            id="footer-newsletter-email"
+            name="email"
+            required
+            placeholder="Enter your email address…"
+            class="dm-footer__newsletter-input"
+            autocomplete="email"
+          >
+          <button type="submit" class="dm-btn dm-btn--primary dm-footer__newsletter-btn">Subscribe</button>
+        </div>
+        <p class="dm-newsletter__feedback js-newsletter-feedback" role="status" aria-live="polite" hidden></p>
+      </form>
+    </div>
+
+    <!-- Multi-Column Links Grid: Brand & Contact | Quick Categories | Customer Service | About Us & Legal/Policies -->
     <div class="dm-footer__grid">
       <!-- Column 1: Brand Identity & Verified Contact -->
       <div>
-        <a href="{% url 'core:home' %}" class="dm-brand" style="margin-bottom: 1rem;">
-          <svg class="dm-brand__emblem" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-            <rect width="64" height="64" rx="14" fill="#0B4F3F"/>
-            <path d="M32 10L38.5 19.5L49.5 16.5L46.5 27.5L56 34L46.5 40.5L49.5 51.5L38.5 48.5L32 58L25.5 48.5L14.5 51.5L17.5 40.5L8 34L17.5 27.5L14.5 16.5L25.5 19.5L32 10Z" stroke="#C88A36" stroke-width="2" fill="#083B2F"/>
-            <path d="M23 42V29C23 24.0294 27.0294 20 32 20C36.9706 20 41 24.0294 41 29V42H23Z" stroke="#FAF7F2" stroke-width="2.5"/>
-            <circle cx="32" cy="29" r="3" fill="#C86D2D"/>
-          </svg>
-          <span class="dm-brand__text">
-            <span class="dm-brand__wordmark" style="color: #FAF7F2;">Deenya<span style="color: #9ED5C5;">Mart</span><span class="dm-brand__dot">.</span></span>
+        <a href="{% url 'core:home' %}" class="dm-brand dm-brand--footer" style="margin-bottom: 1rem;">
+          <span class="dm-brand__footer-card">
+            <img
+              src="{% static 'img/deenya-mart-logo.png' %}"
+              alt="{{ site_settings.site_name|default:'DeenyaMart' }}"
+              width="468"
+              height="380"
+              loading="lazy"
+              decoding="async"
+              class="dm-brand__logo dm-brand__logo--footer"
+            >
           </span>
+          <span class="sr-only">DeenyaMart</span>
         </a>
-        <p style="font-size: var(--dm-text-sm); color: var(--dm-text-on-dark-muted); max-width: 38ch; margin-bottom: 1.25rem;">
+        <p class="dm-footer__tagline">
           {{ site_settings.tagline|default:"Thoughtful Modest Wear & Everyday Essentials, Delivered Across Bangladesh." }}
         </p>
 
         <div class="dm-footer__contact-item">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C88A36" stroke-width="2" style="flex-shrink: 0; margin-top: 3px;" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--dm-kid-yellow)" stroke-width="2" style="flex-shrink: 0; margin-top: 3px;" aria-hidden="true">
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
             <circle cx="12" cy="10" r="3"></circle>
           </svg>
           <span>{{ site_settings.headquarters_address|default:"House 14, Road 7, Sector 4, Uttara, Dhaka-1230, Bangladesh" }}</span>
         </div>
         <div class="dm-footer__contact-item">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C88A36" stroke-width="2" style="flex-shrink: 0; margin-top: 3px;" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--dm-kid-yellow)" stroke-width="2" style="flex-shrink: 0; margin-top: 3px;" aria-hidden="true">
             <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
           </svg>
           <span class="dm-tabular">{{ site_settings.support_phone|default:"+880 1700-000000" }} · {{ site_settings.support_hours|default:"Sat – Thu, 10 AM – 8 PM" }}</span>
         </div>
         <div class="dm-footer__contact-item">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C88A36" stroke-width="2" style="flex-shrink: 0; margin-top: 3px;" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--dm-kid-yellow)" stroke-width="2" style="flex-shrink: 0; margin-top: 3px;" aria-hidden="true">
             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
             <polyline points="22,6 12,13 2,6"></polyline>
           </svg>
@@ -69,9 +102,9 @@
         {% endif %}
       </div>
 
-      <!-- Column 2: Dynamic Catalog Categories -->
+      <!-- Column 2: Quick Categories -->
       <div>
-        <h3 class="dm-footer__heading">Catalog Categories</h3>
+        <h3 class="dm-footer__heading">Quick Categories</h3>
         <ul class="dm-footer__list">
           {% for category in nav_categories %}
           <li>
@@ -82,14 +115,14 @@
             <a href="{% url 'catalog:product_list' %}?sort=newest" class="dm-footer__link">New Arrivals</a>
           </li>
           <li>
-            <a href="{% url 'catalog:product_list' %}?on_sale=1" class="dm-footer__link">Value Offers</a>
+            <a href="{% url 'catalog:product_list' %}?on_sale=1" class="dm-footer__link">Value Offers &amp; Sale</a>
           </li>
         </ul>
       </div>
 
-      <!-- Column 3: Customer Care & Order Services -->
+      <!-- Column 3: Customer Service -->
       <div>
-        <h3 class="dm-footer__heading">Customer Services</h3>
+        <h3 class="dm-footer__heading">Customer Service</h3>
         <ul class="dm-footer__list">
           <li><a href="{% url 'orders:track' %}" class="dm-footer__link">Track Your Order</a></li>
           <li><a href="{% url 'cart:detail' %}" class="dm-footer__link">Shopping Bag</a></li>
@@ -99,9 +132,9 @@
         </ul>
       </div>
 
-      <!-- Column 4: Policies & Verified Fulfillment -->
+      <!-- Column 4: About Us & Legal / Policies -->
       <div>
-        <h3 class="dm-footer__heading">Store Policies</h3>
+        <h3 class="dm-footer__heading">About Us &amp; Policies</h3>
         <ul class="dm-footer__list">
           <li><a href="{% url 'core:page_detail' slug='about-us' %}" class="dm-footer__link">About DeenyaMart</a></li>
           <li><a href="{% url 'core:page_detail' slug='shipping-policy' %}" class="dm-footer__link">Delivery &amp; COD Guidelines</a></li>
@@ -112,12 +145,26 @@
       </div>
     </div>
 
+    <!-- Bottom Copyright & Payment / Fulfillment Method Icons Bar -->
     <div class="dm-footer__bottom">
       <span>&copy; {% now "Y" %} {{ site_settings.site_name|default:"DeenyaMart" }}. All rights reserved. Prices in BDT (৳).</span>
-      <div class="dm-footer__badges">
-        <span class="dm-footer__pill">Verified Payment: Cash on Delivery (COD)</span>
-        <span class="dm-footer__pill">Inside Dhaka: ৳60</span>
-        <span class="dm-footer__pill">Outside Dhaka: ৳120</span>
+
+      <div class="dm-footer__badges" aria-label="Payment and delivery methods">
+        <span class="dm-footer__pill dm-footer__pill--cod">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+            <line x1="2" y1="10" x2="22" y2="10"></line>
+          </svg>
+          <span>Verified Payment: Cash on Delivery (COD)</span>
+        </span>
+        <span class="dm-footer__pill">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+          <span>Doorstep Inspection</span>
+        </span>
+        <span class="dm-footer__pill dm-tabular">Inside Dhaka: ৳60</span>
+        <span class="dm-footer__pill dm-tabular">Outside Dhaka: ৳120</span>
       </div>
     </div>
   </div>

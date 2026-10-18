@@ -45,9 +45,9 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0 0 var(--dm-space-3) 0;
   color: var(--dm-text-primary);
   font-family: var(--dm-font-display);
-  font-weight: 600;
+  font-weight: var(--dm-weight-semibold);
   line-height: 1.2;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 
 p {
@@ -83,7 +83,7 @@ button {
 
 /* Keyboard-Visible Focus Ring (WCAG 2.1 AA) */
 :focus-visible {
-  outline: 2.5px solid var(--dm-brand-primary);
+  outline: 2.5px solid var(--dm-border-focus);
   outline-offset: 2px;
 }
 

@@ -30,8 +30,8 @@ class SiteSettings(TimeStampedModel):
         max_length=240,
         default="Cash on Delivery across Bangladesh · Inside Dhaka ৳60 (1–2 Days) · Outside Dhaka ৳120",
     )
-    announcement_cta_text = models.CharField(max_length=60, default="Explore Modest Edit", blank=True)
-    announcement_cta_url = models.CharField(max_length=200, default="/category/womens-modest-wear/", blank=True)
+    announcement_cta_text = models.CharField(max_length=60, default="", blank=True)
+    announcement_cta_url = models.CharField(max_length=200, default="", blank=True)
 
     # 4. Editorial Hero configuration
     hero_eyebrow = models.CharField(

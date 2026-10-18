@@ -1,30 +1,45 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" fill="none">
-  <rect width="800" height="520" rx="20" fill="#10382E"/>
-  <circle cx="650" cy="140" r="180" fill="#0B4F3F" fill-opacity="0.6"/>
-  <circle cx="160" cy="420" r="210" fill="#C86D2D" fill-opacity="0.18"/>
+  <defs>
+    <linearGradient id="promoBg" x1="0" y1="0" x2="800" y2="520" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#092C3E"/>
+      <stop offset="55%" stop-color="#0D3D54"/>
+      <stop offset="100%" stop-color="#124B66"/>
+    </linearGradient>
+    <linearGradient id="martGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#F56B3A"/>
+      <stop offset="100%" stop-color="#BA2A67"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="520" rx="20" fill="url(#promoBg)"/>
+  <circle cx="670" cy="120" r="190" fill="#1CA9B0" fill-opacity="0.24"/>
+  <circle cx="160" cy="430" r="220" fill="#BA2A67" fill-opacity="0.22"/>
+  <circle cx="440" cy="60" r="130" fill="#FED23A" fill-opacity="0.15"/>
   <!-- Woven Swatch Cards -->
   <g transform="translate(90, 70)">
-    <rect x="0" y="30" width="190" height="250" rx="16" fill="#FAF7F2" stroke="#E2DDD2" stroke-width="2"/>
-    <rect x="18" y="48" width="154" height="150" rx="10" fill="#E8DFCE"/>
-    <path d="M35 90H155M35 115H155M35 140H155M35 165H120" stroke="#B8862D" stroke-width="2" stroke-opacity="0.5"/>
-    <text x="24" y="232" fill="#14231E" font-family="system-ui, sans-serif" font-size="15" font-weight="700">01 · Natural Linen</text>
-    <text x="24" y="254" fill="#4A5D55" font-family="system-ui, sans-serif" font-size="12">Breathable 180 GSM Weave</text>
+    <rect x="0" y="30" width="190" height="250" rx="16" fill="#FFFFFF" stroke="#D9E6EC" stroke-width="2"/>
+    <rect x="18" y="48" width="154" height="150" rx="10" fill="#FFF6E5"/>
+    <circle cx="95" cy="123" r="44" fill="#FED23A" fill-opacity="0.45"/>
+    <path d="M35 90H155M35 115H155M35 140H155M35 165H120" stroke="#F56B3A" stroke-width="2.2" stroke-opacity="0.65"/>
+    <text x="24" y="232" fill="#0D3D54" font-family="system-ui, sans-serif" font-size="15" font-weight="700">01 · Natural Linen</text>
+    <text x="24" y="254" fill="#476270" font-family="system-ui, sans-serif" font-size="12">Breathable 180 GSM Weave</text>
   </g>
   <g transform="translate(310, 45)">
-    <rect x="0" y="30" width="190" height="250" rx="16" fill="#FAF7F2" stroke="#E2DDD2" stroke-width="2"/>
-    <rect x="18" y="48" width="154" height="150" rx="10" fill="#D9E6E1"/>
-    <circle cx="95" cy="123" r="42" fill="#0B4F3F" fill-opacity="0.85"/>
-    <text x="24" y="232" fill="#14231E" font-family="system-ui, sans-serif" font-size="15" font-weight="700">02 · Combed Cotton</text>
-    <text x="24" y="254" fill="#4A5D55" font-family="system-ui, sans-serif" font-size="12">Soft Everyday Salat Drape</text>
+    <rect x="0" y="30" width="190" height="250" rx="16" fill="#FFFFFF" stroke="#D9E6EC" stroke-width="2"/>
+    <rect x="18" y="48" width="154" height="150" rx="10" fill="#E6F7F8"/>
+    <circle cx="95" cy="123" r="42" fill="#0D3D54" fill-opacity="0.9"/>
+    <path d="M53 123C53 100 72 81 95 81V165C72 165 53 146 53 123Z" fill="#1CA9B0"/>
+    <text x="24" y="232" fill="#0D3D54" font-family="system-ui, sans-serif" font-size="15" font-weight="700">02 · Combed Cotton</text>
+    <text x="24" y="254" fill="#476270" font-family="system-ui, sans-serif" font-size="12">Soft Everyday Salat Drape</text>
   </g>
   <g transform="translate(530, 75)">
-    <rect x="0" y="30" width="190" height="250" rx="16" fill="#FAF7F2" stroke="#E2DDD2" stroke-width="2"/>
-    <rect x="18" y="48" width="154" height="150" rx="10" fill="#F2DFD3"/>
-    <path d="M55 165C75 95 115 95 135 165" stroke="#C86D2D" stroke-width="4" fill="none"/>
-    <text x="24" y="232" fill="#14231E" font-family="system-ui, sans-serif" font-size="15" font-weight="700">03 · Cherry Crepe</text>
-    <text x="24" y="254" fill="#4A5D55" font-family="system-ui, sans-serif" font-size="12">Opaque Flowing Finish</text>
+    <rect x="0" y="30" width="190" height="250" rx="16" fill="#FFFFFF" stroke="#D9E6EC" stroke-width="2"/>
+    <rect x="18" y="48" width="154" height="150" rx="10" fill="#FDF0F6"/>
+    <circle cx="95" cy="123" r="40" fill="url(#martGrad)" fill-opacity="0.9"/>
+    <path d="M55 165C75 95 115 95 135 165" stroke="#FED23A" stroke-width="4" fill="none"/>
+    <text x="24" y="232" fill="#0D3D54" font-family="system-ui, sans-serif" font-size="15" font-weight="700">03 · Cherry Crepe</text>
+    <text x="24" y="254" fill="#476270" font-family="system-ui, sans-serif" font-size="12">Opaque Flowing Finish</text>
   </g>
   <!-- Bottom Caption Ribbon -->
-  <rect x="90" y="385" width="630" height="64" rx="14" fill="#082B23" stroke="#C88A36" stroke-opacity="0.4"/>
-  <text x="120" y="423" fill="#FAF7F2" font-family="system-ui, sans-serif" font-size="15" font-weight="500" letter-spacing="0.04em">LOOM-TESTED FOR BANGLADESH HUMIDITY  ·  OPAQUE SINGLE-LAYER COVERAGE</text>
+  <rect x="90" y="385" width="630" height="64" rx="14" fill="#072230" stroke="#1CA9B0" stroke-opacity="0.5"/>
+  <text x="120" y="423" fill="#FAF7F2" font-family="system-ui, sans-serif" font-size="15" font-weight="600" letter-spacing="0.04em">LOOM-TESTED FOR BANGLADESH HUMIDITY  ·  OPAQUE SINGLE-LAYER COVERAGE</text>
 </svg>
