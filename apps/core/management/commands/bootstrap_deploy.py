@@ -33,12 +33,71 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         if not options["skip_data"]:
             if Product.objects.exists():
-                self.stdout.write("Catalog already populated; skipping fixture load.")
+                self.stdout.write(
+                    f"Catalog already populated; syncing categories, product category mappings, and site settings from '{options['fixture']}'..."
+                )
+                self._sync_catalog_taxonomy(options["fixture"])
             else:
                 self.stdout.write(f"Empty catalog detected; loading fixture '{options['fixture']}'...")
                 call_command("loaddata", options["fixture"])
 
         self._ensure_superuser()
+
+    def _sync_catalog_taxonomy(self, fixture_name: str):
+        import json
+        from pathlib import Path
+        from apps.catalog.models import Category
+        from apps.core.models import SiteSettings
+
+        fixture_path = Path(__file__).resolve().parents[2] / "fixtures" / f"{fixture_name}.json"
+        if not fixture_path.exists():
+            return
+
+        data = json.loads(fixture_path.read_text(encoding="utf-8"))
+        # 1. Sync SiteSettings
+        for entry in data:
+            if entry.get("model") == "core.sitesettings":
+                fields = entry.get("fields", {})
+                SiteSettings.objects.filter(pk=entry["pk"]).update(
+                    announcement_cta_text=fields.get("announcement_cta_text", ""),
+                    announcement_cta_url=fields.get("announcement_cta_url", ""),
+                )
+
+        # 2. Sync Categories (parents first, then children)
+        cat_entries = [e for e in data if e.get("model") == "catalog.category"]
+        pk_to_cat = {}
+        for is_child_pass in (False, True):
+            for entry in cat_entries:
+                fields = entry["fields"]
+                parent_pk = fields.get("parent")
+                if bool(parent_pk) != is_child_pass:
+                    continue
+                parent_obj = pk_to_cat.get(parent_pk) if parent_pk else None
+                cat_obj, _ = Category.objects.update_or_create(
+                    slug=fields["slug"],
+                    defaults={
+                        "name": fields["name"],
+                        "parent": parent_obj,
+                        "subtitle": fields.get("subtitle", ""),
+                        "description": fields.get("description", ""),
+                        "image_url": fields.get("image_url", ""),
+                        "accent_tone": fields.get("accent_tone", "emerald"),
+                        "is_featured": fields.get("is_featured", False),
+                        "is_active": fields.get("is_active", True),
+                        "sort_order": fields.get("sort_order", 0),
+                    },
+                )
+                pk_to_cat[entry["pk"]] = cat_obj
+
+        # 3. Sync Product -> Category assignments by SKU
+        for entry in data:
+            if entry.get("model") == "catalog.product":
+                fields = entry["fields"]
+                target_cat = pk_to_cat.get(fields.get("category"))
+                if target_cat and fields.get("sku"):
+                    Product.objects.filter(sku=fields["sku"]).exclude(category=target_cat).update(
+                        category=target_cat
+                    )
 
     def _ensure_superuser(self):
         username = os.environ.get("DJANGO_SUPERUSER_USERNAME", "").strip()

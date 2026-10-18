@@ -36,7 +36,7 @@
       <a href="{{ cat.get_absolute_url }}" class="dm-cat-orb">
         <span class="dm-cat-orb__ring">
           <img
-            src="{{ cat.image_url|default:'/static/img/categories/cat-womens-modest.png' }}"
+            src="{% if cat.slug == 'womens-modest-wear' %}{% static 'img/categories/cat-womens-modest.png' %}{% elif cat.slug == 'mens-modest-wear' %}{% static 'img/categories/cat-mens-modest.png' %}{% elif cat.slug == 'kids-modest-wear' %}{% static 'img/categories/cat-kids-modest.png' %}{% elif cat.slug == 'home-kitchen' %}{% static 'img/categories/cat-home-kitchen.png' %}{% elif cat.slug == 'smart-gadgets' %}{% static 'img/categories/cat-smart-gadgets.png' %}{% elif cat.slug == 'home-decor' %}{% static 'img/categories/cat-home-decor.png' %}{% elif cat.image_url %}{{ cat.image_url }}{% else %}{% static 'img/categories/cat-womens-modest.png' %}{% endif %}"
             alt="{{ cat.name }}"
             width="160"
             height="160"
